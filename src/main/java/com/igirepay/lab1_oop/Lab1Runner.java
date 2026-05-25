@@ -66,9 +66,8 @@ public class Lab1Runner {
                     int id = Integer.parseInt(scanner.nextLine());
                     System.out.print("Enter amount to deposit: ");
                     double amount = Double.parseDouble(scanner.nextLine());
-                    // Reference ID is auto-generated - the user should never set this manually.
-                    // UUID.randomUUID() produces a globally unique string like: a3f1c2d4-...
-                    String ref = java.util.UUID.randomUUID().toString();
+                    System.out.print("Enter reference ID (e.g. DEP-001): ");
+                    String ref = scanner.nextLine();
                     try {
                         service.processTransaction(id, ref, amount, TransactionType.DEPOSIT);
                         System.out.println("Deposit successful! New balance: " + service.getAccount(id).getBalance() + " RWF");
@@ -82,7 +81,8 @@ public class Lab1Runner {
                     int id = Integer.parseInt(scanner.nextLine());
                     System.out.print("Enter amount to withdraw: ");
                     double amount = Double.parseDouble(scanner.nextLine());
-                    String ref = java.util.UUID.randomUUID().toString();
+                    System.out.print("Enter reference ID (e.g. WIT-001): ");
+                    String ref = scanner.nextLine();
                     try {
                         service.processTransaction(id, ref, amount, TransactionType.WITHDRAW);
                         System.out.println("Withdrawal successful! New balance: " + service.getAccount(id).getBalance() + " RWF");
@@ -98,8 +98,8 @@ public class Lab1Runner {
                     int receiverId = Integer.parseInt(scanner.nextLine());
                     System.out.print("Enter amount to transfer: ");
                     double amount = Double.parseDouble(scanner.nextLine());
-                    // One UUID for the whole transfer - both sides share the same reference
-                    String ref = java.util.UUID.randomUUID().toString();
+                    System.out.print("Enter reference ID (e.g. TRF-001): ");
+                    String ref = scanner.nextLine();
                     try {
                         service.transfer(senderId, receiverId, ref, amount);
                         System.out.println("Transfer successful!");
@@ -129,8 +129,6 @@ public class Lab1Runner {
                 default -> System.out.println("Invalid option. Please choose 1-6.");
             }
         }
-
-        // Always close the scanner when done to release the keyboard resource
         scanner.close();
     }
 }
