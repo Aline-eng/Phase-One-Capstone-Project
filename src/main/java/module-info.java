@@ -1,0 +1,16 @@
+module com.igirepay {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires org.controlsfx.controls;
+    requires org.kordamp.bootstrapfx.core;
+    requires java.sql;  // needed for JDBC in Lab 2 & 3
+
+    // Opens our packages to javafx.fxml so it can use reflection to load controllers
+    opens com.igirepay to javafx.fxml;
+    opens com.igirepay.lab3 to javafx.fxml;
+
+    exports com.igirepay;
+    exports com.igirepay.lab1;
+    exports com.igirepay.lab2;
+    exports com.igirepay.lab3;
+}
