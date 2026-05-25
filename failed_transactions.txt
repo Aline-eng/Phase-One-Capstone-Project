@@ -1,3 +1,0 @@
-[FAILED] | Ref: WIT-001 | Reason: Duplicate transaction rejected | Time: 2026-05-25T18:25:14.451527800
-[FAILED] | Ref: DEP-001 | Reason: Account not found: 10000 | Time: 2026-05-25T18:26:38.986100300
-[FAILED] | Ref: TRF-001-OUT | Reason: Duplicate transaction rejected | Time: 2026-05-25T18:27:30.774945700
