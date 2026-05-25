@@ -44,7 +44,7 @@ public class PaymentService {
 
     // Core method: processes a transaction only if the referenceId is new
     public Transaction processTransaction(int accountId, String referenceId, double amount, TransactionType type)
-            throws InvalidAmountException, InsufficientBalanceException {
+            throws Exception {
 
         // Idempotency check: if this referenceId was already processed, reject it
         if (processedReferenceIds.contains(referenceId)) {
