@@ -8,6 +8,6 @@ import com.igirepay.lab2_jdbc.Lab2Runner;
 public class Main {
     public static void main(String[] args) {
         Lab1Runner.run();
-        Lab2Runner.run();
+        //Lab2Runner.run();
     }
 }
