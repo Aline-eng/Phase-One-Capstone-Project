@@ -1,0 +1,6 @@
+Account: 101 | Customer: Alice Uwase | Ref: TRF-001-OUT | Type: WITHDRAW | Amount: 10000.0 RWF | Time: 2026-05-25T18:20:54.164627700
+Account: 102 | Customer: Alice Uwase | Ref: TRF-001-IN | Type: DEPOSIT | Amount: 10000.0 RWF | Time: 2026-05-25T18:20:54.197210400
+Account: 101 | Customer: Alice Uwase | Ref: WIT-001 | Type: WITHDRAW | Amount: 10000.0 RWF | Time: 2026-05-25T18:24:46.576254200
+Account: 101 | Customer: Alice Uwase | Ref: DEP-001 | Type: DEPOSIT | Amount: 10000.0 RWF | Time: 2026-05-25T18:26:53.438697200
+Account: 101 | Customer: Alice Uwase | Ref: TRF-003-OUT | Type: WITHDRAW | Amount: 10000.0 RWF | Time: 2026-05-25T18:27:58.627511900
+Account: 201 | Customer: Bob Mugisha | Ref: TRF-003-IN | Type: DEPOSIT | Amount: 10000.0 RWF | Time: 2026-05-25T18:27:58.630873800

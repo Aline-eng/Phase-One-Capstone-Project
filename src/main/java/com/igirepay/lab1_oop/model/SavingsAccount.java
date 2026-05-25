@@ -2,6 +2,7 @@ package com.igirepay.lab1_oop.model;
 
 import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
 import com.igirepay.lab1_oop.exception.InvalidAmountException;
+import com.igirepay.lab1_oop.util.TransactionFee;
 
 // SavingsAccount has withdrawal restrictions: a fee and a minimum balance requirement
 public class SavingsAccount extends Account {
@@ -16,14 +17,14 @@ public class SavingsAccount extends Account {
     @Override
     public void withdraw(double amount) throws InvalidAmountException, InsufficientBalanceException {
         if (amount <= 0) throw new InvalidAmountException("Amount must be greater than 0.");
-        // Total deducted = requested amount + fee
-        double totalDeducted = amount + WITHDRAWAL_FEE;
-        if (getBalance() - totalDeducted < MINIMUM_BALANCE) {
-            throw new InsufficientBalanceException(
-                "Cannot withdraw. Minimum balance of " + MINIMUM_BALANCE + " must be maintained."
-            );
-        }
+        double fee = TransactionFee.getSavingsFee(amount);
+        double totalDeducted = amount + fee;
+
+        if (getBalance() - totalDeducted < MINIMUM_BALANCE) throw new InsufficientBalanceException(
+                "Cannot withdraw. Minimum balance of " + MINIMUM_BALANCE + " RWF must be maintained!"
+        );
         setBalance(getBalance() - totalDeducted);
+        if (fee > 0) System.out.println("Early withdrawal fee charged: " + fee + " RWF");
     }
 
     @Override

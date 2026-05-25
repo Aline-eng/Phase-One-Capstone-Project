@@ -2,6 +2,7 @@ package com.igirepay.lab1_oop.model;
 
 import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
 import com.igirepay.lab1_oop.exception.InvalidAmountException;
+import com.igirepay.lab1_oop.util.TransactionFee;
 
 // WalletAccount extends Account - inherits deposit(), balance, accountId
 // Allows instant transfers with no fees or minimum balance restrictions
@@ -13,9 +14,14 @@ public class WalletAccount extends Account {
 
     @Override
     public void withdraw(double amount) throws InvalidAmountException, InsufficientBalanceException {
-        if (amount <= 0) throw new InvalidAmountException("Amount must be greater than 0.");
-        if (amount > getBalance()) throw new InsufficientBalanceException("Insufficient funds.");
-        setBalance(getBalance() - amount);
+        if (amount <= 0) throw new InvalidAmountException("Amount must be greater than 0!!");
+        double fee = TransactionFee.getWalletFee(amount);
+        double totalDeducted = amount + fee;
+        if (totalDeducted > getBalance()) throw new InsufficientBalanceException(
+                "Insufficient funds! Need " + totalDeducted + " (amount + fee of " + fee + ")"
+        );
+        setBalance(getBalance() - totalDeducted);
+        System.out.println("Fee charged: " + fee + " RWF");
     }
 
     @Override
