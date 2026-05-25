@@ -1,7 +1,7 @@
-package com.igirepay.lab1.model;
+package com.igirepay.lab1_oop.model;
 
-import com.igirepay.lab1.exception.InsufficientBalanceException;
-import com.igirepay.lab1.exception.InvalidAmountException;
+import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
+import com.igirepay.lab1_oop.exception.InvalidAmountException;
 
 // SavingsAccount has withdrawal restrictions: a fee and a minimum balance requirement
 public class SavingsAccount extends Account {

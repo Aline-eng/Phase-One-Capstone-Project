@@ -7,10 +7,10 @@ module com.igirepay {
 
     // Opens our packages to javafx.fxml so it can use reflection to load controllers
     opens com.igirepay to javafx.fxml;
-    opens com.igirepay.lab3 to javafx.fxml;
+    opens com.igirepay.lab3_mini_capstone to javafx.fxml;
 
     exports com.igirepay;
-    exports com.igirepay.lab1;
-    exports com.igirepay.lab2;
-    exports com.igirepay.lab3;
+    exports com.igirepay.lab1_oop;
+    exports com.igirepay.lab2_jdbc;
+    exports com.igirepay.lab3_mini_capstone;
 }

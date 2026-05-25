@@ -1,7 +1,7 @@
-package com.igirepay.lab1.model;
+package com.igirepay.lab1_oop.model;
 
-import com.igirepay.lab1.exception.InsufficientBalanceException;
-import com.igirepay.lab1.exception.InvalidAmountException;
+import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
+import com.igirepay.lab1_oop.exception.InvalidAmountException;
 
 // WalletAccount extends Account - inherits deposit(), balance, accountId
 // Allows instant transfers with no fees or minimum balance restrictions

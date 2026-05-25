@@ -1,6 +1,6 @@
-package com.igirepay.lab1.model;
+package com.igirepay.lab1_oop.model;
 
-import com.igirepay.lab1.enums.TransactionType;
+import com.igirepay.lab1_oop.enums.TransactionType;
 import java.time.LocalDateTime;
 
 public class Transaction {

@@ -1,4 +1,4 @@
-package com.igirepay.lab1.model;
+package com.igirepay.lab1_oop.model;
 
 // Abstract class - cannot be instantiated directly.
 // WalletAccount and SavingsAccount will extend this.

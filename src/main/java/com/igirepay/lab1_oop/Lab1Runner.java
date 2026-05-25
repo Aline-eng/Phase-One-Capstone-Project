@@ -1,9 +1,9 @@
-package com.igirepay.lab1;
+package com.igirepay.lab1_oop;
 
-import com.igirepay.lab1.enums.TransactionType;
-import com.igirepay.lab1.exception.DuplicateTransactionException;
-import com.igirepay.lab1.model.*;
-import com.igirepay.lab1.service.PaymentService;
+import com.igirepay.lab1_oop.enums.TransactionType;
+import com.igirepay.lab1_oop.exception.DuplicateTransactionException;
+import com.igirepay.lab1_oop.model.*;
+import com.igirepay.lab1_oop.service.PaymentService;
 
 public class Lab1Runner {
 

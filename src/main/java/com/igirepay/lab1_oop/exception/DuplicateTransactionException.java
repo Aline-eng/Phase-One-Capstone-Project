@@ -1,4 +1,4 @@
-package com.igirepay.lab1.exception;
+package com.igirepay.lab1_oop.exception;
 
 // RuntimeException because duplicate transactions are a programming/logic error,
 // not something the caller is expected to recover from gracefully

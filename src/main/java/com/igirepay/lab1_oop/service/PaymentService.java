@@ -1,12 +1,11 @@
-package com.igirepay.lab1.service;
+package com.igirepay.lab1_oop.service;
 
-import com.igirepay.lab1.enums.TransactionType;
-import com.igirepay.lab1.exception.DuplicateTransactionException;
-import com.igirepay.lab1.exception.InsufficientBalanceException;
-import com.igirepay.lab1.exception.InvalidAmountException;
-import com.igirepay.lab1.model.Account;
-import com.igirepay.lab1.model.Customer;
-import com.igirepay.lab1.model.Transaction;
+import com.igirepay.lab1_oop.enums.TransactionType;
+import com.igirepay.lab1_oop.exception.DuplicateTransactionException;
+import com.igirepay.lab1_oop.exception.InvalidAmountException;
+import com.igirepay.lab1_oop.model.Account;
+import com.igirepay.lab1_oop.model.Customer;
+import com.igirepay.lab1_oop.model.Transaction;
 
 import java.util.*;
 

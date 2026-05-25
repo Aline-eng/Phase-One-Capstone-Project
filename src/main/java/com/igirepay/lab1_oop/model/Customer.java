@@ -1,4 +1,4 @@
-package com.igirepay.lab1.model;
+package com.igirepay.lab1_oop.model;
 
 import java.util.ArrayList;
 import java.util.List;

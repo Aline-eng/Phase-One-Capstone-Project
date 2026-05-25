@@ -1,4 +1,4 @@
-package com.igirepay.lab3;
+package com.igirepay.lab3_mini_capstone;
 
 public class Lab3Runner {
     public static void run() {

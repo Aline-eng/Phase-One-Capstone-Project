@@ -1,4 +1,4 @@
-package com.igirepay.lab2;
+package com.igirepay.lab2_jdbc;
 
 public class Lab2Runner {
     public static void run() {
