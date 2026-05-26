@@ -90,14 +90,30 @@ public class WalletService {
         // Mark reference as processed
         processedReferenceIds.add(referenceId);
 
-        // Record ONE transaction of type TRANSFER
-        Transaction transaction = new Transaction(transactionCounter++, referenceId, amount, TransactionType.TRANSFER);
-        transactionHistory.add(transaction);
+        // Record TRANSFER_OUT on sender - money left their account
+        Transaction outTx = new Transaction(transactionCounter++, referenceId, amount, TransactionType.TRANSFER_OUT);
+        transactionHistory.add(outTx);
+        TransactionLogger.logSuccess(outTx, senderName);
+        TransactionLogger.logStatement(outTx, senderAccountId, senderName);
 
-        TransactionLogger.logSuccess(transaction, senderName);
-        TransactionLogger.logStatement(transaction, senderAccountId, senderName);
+        // Record TRANSFER_IN on receiver - money arrived in their account
+        // We use referenceId + "-IN" so it is a distinct entry but still traceable
+        // to the same transfer operation
+        Transaction inTx = new Transaction(transactionCounter++, referenceId + "-IN", amount, TransactionType.TRANSFER_IN);
+        transactionHistory.add(inTx);
 
-        return transaction;
+        // Find receiver name for logging
+        String receiverName = "Unknown";
+        for (Customer c : customers) {
+            if (c.getAccounts().contains(receiver)) {
+                receiverName = c.getFullName();
+                break;
+            }
+        }
+        TransactionLogger.logSuccess(inTx, receiverName);
+        TransactionLogger.logStatement(inTx, receiverAccountId, receiverName);
+
+        return outTx;
     }
 
     // Core method - the only way a transaction gets processed in this system
