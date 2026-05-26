@@ -3,6 +3,8 @@ package com.igirepay.lab2_jdbc.dao;
 import com.igirepay.lab2_jdbc.db.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // ProcessedRequestDAO handles the processed_requests table.
 // This table has one job: remember every reference ID that was already processed
@@ -50,5 +52,24 @@ public class ProcessedRequestDAO {
             stmt.setString(1, referenceId);
             stmt.executeUpdate();
         }
+    }
+
+    // Returns all processed reference IDs ordered by most recent first.
+    // Used by IdempotencyService to display the full processed requests log.
+    public List<String> findAll() throws SQLException {
+        String sql = "SELECT reference_id, processed_at FROM processed_requests ORDER BY processed_at DESC";
+        List<String> list = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                // Format each row as a readable string for display
+                list.add("Ref: " + rs.getString("reference_id")
+                        + " | Processed at: " + rs.getTimestamp("processed_at"));
+            }
+        }
+        return list;
     }
 }

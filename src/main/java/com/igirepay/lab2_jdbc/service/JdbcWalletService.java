@@ -4,7 +4,9 @@ import com.igirepay.lab1_oop.enums.TransactionType;
 import com.igirepay.lab1_oop.exception.DuplicateTransactionException;
 import com.igirepay.lab1_oop.exception.InvalidAmountException;
 import com.igirepay.lab1_oop.model.*;
-import com.igirepay.lab2_jdbc.dao.*;
+import com.igirepay.lab2_jdbc.dao.AccountDAO;
+import com.igirepay.lab2_jdbc.dao.CustomerDAO;
+import com.igirepay.lab2_jdbc.dao.TransactionDAO;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,7 +29,9 @@ public class JdbcWalletService {
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final AccountDAO accountDAO = new AccountDAO();
     private final TransactionDAO transactionDAO = new TransactionDAO();
-    private final ProcessedRequestDAO processedRequestDAO = new ProcessedRequestDAO();
+    // IdempotencyService replaces direct ProcessedRequestDAO calls.
+    // All duplicate-prevention logic is now owned by one dedicated class.
+    private final IdempotencyService idempotencyService = new IdempotencyService();
 
     // transactionCounter gives each Transaction object a local ID.
     // In Lab 2 the real permanent ID comes from the database (SERIAL),
@@ -113,13 +117,10 @@ public class JdbcWalletService {
         // call comes from - terminal input, JavaFX form, or any future interface.
         referenceId = referenceId.toUpperCase().trim();
 
-        // Step 1: Check the database for this reference ID.
-        // Unlike Lab 1 which used a HashSet in memory, here we check the
-        // processed_requests table - so duplicates are rejected even after
-        // the program restarts, because the database persists between runs.
-        if (processedRequestDAO.exists(referenceId)) {
-            throw new DuplicateTransactionException("Transaction already processed: " + referenceId);
-        }
+        // Step 1: Idempotency check - delegates to IdempotencyService.
+        // If the reference ID was already used, this throws DuplicateTransactionException
+        // and the method stops here - no money moves, nothing is saved.
+        idempotencyService.validateReference(referenceId);
 
         // Step 2: Load the account from the database.
         // We load it fresh each time instead of caching it, so the balance
@@ -144,10 +145,10 @@ public class JdbcWalletService {
         Transaction transaction = new Transaction(transactionCounter++, referenceId, amount, type);
         transactionDAO.save(accountId, transaction);
 
-        // Step 6: Save the reference ID to processed_requests.
+        // Step 6: Mark reference ID as processed via IdempotencyService.
         // This must happen AFTER the transaction succeeds - if we saved it before
         // and the transaction failed, the reference ID would be permanently blocked.
-        processedRequestDAO.save(referenceId);
+        idempotencyService.markAsProcessed(referenceId);
 
         return transaction;
     }
@@ -162,9 +163,8 @@ public class JdbcWalletService {
         // Normalize reference ID - same rule as processTransaction
         referenceId = referenceId.toUpperCase().trim();
 
-        if (processedRequestDAO.exists(referenceId)) {
-            throw new DuplicateTransactionException("Transfer already processed: " + referenceId);
-        }
+        // Idempotency check via IdempotencyService
+        idempotencyService.validateReference(referenceId);
 
         Account sender = accountDAO.findById(senderAccountId);
         Account receiver = accountDAO.findById(receiverAccountId);
@@ -188,12 +188,16 @@ public class JdbcWalletService {
         Transaction inTx = new Transaction(transactionCounter++, referenceId + "-IN", amount, TransactionType.TRANSFER_IN);
         transactionDAO.save(receiverAccountId, inTx);
 
-        // Only one entry in processed_requests - we check the base referenceId.
-        // The "-IN" variant is not checked separately because it is always
-        // created together with the "-OUT" - they are one operation.
-        processedRequestDAO.save(referenceId);
+        // Mark the base reference ID as processed - the "-IN" variant is part
+        // of the same operation so it does not need its own processed_requests entry.
+        idempotencyService.markAsProcessed(referenceId);
 
         return outTx;
+    }
+
+    // Returns all processed reference IDs - exposes the idempotency audit log.
+    public List<String> getAllProcessedRequests() throws SQLException {
+        return idempotencyService.getAllProcessedRequests();
     }
 
     // Returns the transaction history for one account, newest first.
