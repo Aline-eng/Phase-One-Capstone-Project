@@ -7,7 +7,8 @@ import com.igirepay.lab2_jdbc.Lab2Runner;
 // For the JavaFX GUI (Lab 3), run Launcher.java instead.
 public class Main {
     public static void main(String[] args) {
-        Lab1Runner.run();
-        //Lab2Runner.run();
+
+        // Lab1Runner.run();
+        Lab2Runner.run();
     }
 }

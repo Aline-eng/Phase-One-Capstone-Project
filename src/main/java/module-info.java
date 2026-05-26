@@ -15,5 +15,6 @@ module com.igirepay {
     exports com.igirepay.lab2_jdbc;
     exports com.igirepay.lab2_jdbc.db;
     exports com.igirepay.lab2_jdbc.dao;
+    exports com.igirepay.lab2_jdbc.service;
     exports com.igirepay.lab3_mini_capstone;
 }
