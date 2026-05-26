@@ -196,11 +196,21 @@ public class Lab2Runner {
                     }
 
                     case "15" -> {
+                        List<String> processed = service.getAllProcessedRequests();
+                        if (processed.isEmpty()) {
+                            System.out.println("No processed requests yet.");
+                        } else {
+                            System.out.println("--- Processed Requests (Idempotency Log) ---");
+                            processed.forEach(System.out::println);
+                        }
+                    }
+
+                    case "16" -> {
                         System.out.println("Goodbye!");
                         running = false;
                     }
 
-                    default -> System.out.println("Invalid option. Please choose 1-15.");
+                    default -> System.out.println("Invalid option. Please choose 1-16.");
                 }
 
             } catch (NumberFormatException e) {
@@ -237,7 +247,8 @@ public class Lab2Runner {
         System.out.println(" 12. Withdraw");
         System.out.println(" 13. Transfer");
         System.out.println(" 14. View transaction history");
-        System.out.println(" 15. Exit");
+        System.out.println(" 15. View processed requests (idempotency log)");
+        System.out.println(" 16. Exit");
         System.out.print("Choose: ");
     }
 }
