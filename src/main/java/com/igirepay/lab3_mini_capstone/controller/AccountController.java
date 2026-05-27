@@ -5,6 +5,7 @@ import com.igirepay.lab1_oop.model.SavingsAccount;
 import com.igirepay.lab1_oop.model.WalletAccount;
 import com.igirepay.lab2_jdbc.service.JdbcWalletService;
 import com.igirepay.lab3_mini_capstone.util.SceneManager;
+import com.igirepay.lab3_mini_capstone.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -38,9 +39,26 @@ public class AccountController {
 
     @FXML
     public void initialize() {
-        // Toggle buttons act as a selector - clicking one deselects the other
         walletToggle.setOnAction(e -> selectWallet());
         savingsToggle.setOnAction(e -> selectSavings());
+
+        // Pre-fill customer ID with the logged-in user's ID and lock it.
+        // A user can only create accounts for themselves.
+        var customer = SessionManager.getInstance().getCurrentCustomer();
+        if (customer != null) {
+            customerIdField.setText(String.valueOf(customer.getCustomerId()));
+            customerIdField.setEditable(false);
+            customerIdField.setStyle("-fx-background-radius: 8; -fx-border-radius: 8; "
+                    + "-fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12; "
+                    + "-fx-background-color: #F5F5F5; -fx-text-fill: #888888;");
+
+            // Also pre-fill the view accounts field
+            viewCustomerIdField.setText(String.valueOf(customer.getCustomerId()));
+            viewCustomerIdField.setEditable(false);
+            customerIdField.setStyle("-fx-background-radius: 8; -fx-border-radius: 8; "
+                    + "-fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12; "
+                    + "-fx-background-color: #F5F5F5; -fx-text-fill: #888888;");
+        }
     }
 
     private void selectWallet() {
@@ -61,36 +79,35 @@ public class AccountController {
 
     @FXML
     private void handleCreate() {
-        String cidText = customerIdField.getText().trim();
         String balText = balanceField.getText().trim();
 
-        if (cidText.isEmpty() || balText.isEmpty()) {
-            showCreateMsg("All fields are required.", false);
+        if (balText.isEmpty()) {
+            showCreateMsg("Please enter an initial balance.", false);
             return;
         }
 
-        try {
-            int customerId = Integer.parseInt(cidText);
-            double balance = Double.parseDouble(balText);
+        // Always use the logged-in customer's ID - never trust the field value alone
+        var customer = SessionManager.getInstance().getCurrentCustomer();
+        if (customer == null) {
+            showCreateMsg("Session expired. Please log in again.", false);
+            return;
+        }
+        int customerId = customer.getCustomerId();
 
+        try {
+            double balance = Double.parseDouble(balText);
             if (balance < 0) {
                 showCreateMsg("Balance cannot be negative.", false);
                 return;
             }
-
-            // Create the correct account subclass based on toggle selection
             Account account = isWallet
                     ? new WalletAccount(0, balance)
                     : new SavingsAccount(0, balance);
-
             int newId = service.createAccount(customerId, account);
             showCreateMsg(account.getAccountType() + " account created! ID: " + newId, true);
-
-            customerIdField.clear();
             balanceField.clear();
-
         } catch (NumberFormatException e) {
-            showCreateMsg("Customer ID and balance must be numbers.", false);
+            showCreateMsg("Balance must be a number.", false);
         } catch (Exception e) {
             showCreateMsg("Error: " + e.getMessage(), false);
         }
@@ -98,42 +115,25 @@ public class AccountController {
 
     @FXML
     private void handleLoadAccounts() {
-        String cidText = viewCustomerIdField.getText().trim();
-        if (cidText.isEmpty()) {
-            accountsListBox.getChildren().clear();
-            accountsListBox.getChildren().add(
-                new Label("Please enter a customer ID.") {{
-                    setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 12px;");
-                }}
-            );
-            return;
-        }
+        // Users can only view their own accounts
+        var customer = SessionManager.getInstance().getCurrentCustomer();
+        if (customer == null) return;
+        int customerId = customer.getCustomerId();
 
         try {
-            int customerId = Integer.parseInt(cidText);
             List<Account> accounts = service.findAccountsByCustomer(customerId);
             accountsListBox.getChildren().clear();
-
             if (accounts.isEmpty()) {
                 accountsListBox.getChildren().add(
-                    new Label("No accounts found for customer " + customerId) {{
+                    new Label("You have no accounts yet.") {{
                         setStyle("-fx-text-fill: #AAAAAA; -fx-font-size: 12px;");
                     }}
                 );
                 return;
             }
-
             for (Account acc : accounts) {
                 accountsListBox.getChildren().add(buildAccountRow(acc));
             }
-
-        } catch (NumberFormatException e) {
-            accountsListBox.getChildren().clear();
-            accountsListBox.getChildren().add(
-                new Label("Customer ID must be a number.") {{
-                    setStyle("-fx-text-fill: #E53935; -fx-font-size: 12px;");
-                }}
-            );
         } catch (Exception e) {
             accountsListBox.getChildren().clear();
             accountsListBox.getChildren().add(

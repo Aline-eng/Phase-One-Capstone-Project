@@ -10,7 +10,6 @@ public class Transaction {
     private TransactionType transactionType;
     private LocalDateTime timestamp;
 
-    // Used when CREATING a new transaction - timestamp is set to right now
     public Transaction(int transactionId, String referenceId, double amount, TransactionType transactionType) {
         this.transactionId = transactionId;
         this.referenceId = referenceId;
@@ -19,9 +18,7 @@ public class Transaction {
         this.timestamp = LocalDateTime.now();
     }
 
-    // Used when LOADING a transaction from the database - timestamp comes from the stored value.
-    // Without this constructor, every loaded transaction would get LocalDateTime.now()
-    // as its timestamp, making all past transactions appear to have the same time.
+    // Used when loading from the database so the stored timestamp is preserved
     public Transaction(int transactionId, String referenceId, double amount,
                        TransactionType transactionType, LocalDateTime timestamp) {
         this.transactionId = transactionId;

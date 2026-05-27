@@ -9,15 +9,13 @@ import java.util.List;
 
 public class CustomerDAO implements GenericDAO<Customer> {
 
-    // CREATE - inserts customer and PIN together in one statement inside a JDBC transaction.
-    // Using a transaction means if anything fails, the whole operation is rolled back -
-    // including the sequence advance, so IDs don't skip on failed registrations.
+    // Inserts customer and PIN in one transaction so a failed insert
+    // does not advance the ID sequence
     public int save(Customer customer, String pin) throws SQLException {
         String sql = "INSERT INTO customers (full_name, email, phone_number, pin, role) VALUES (?, ?, ?, ?, ?)";
 
         Connection conn = DatabaseConnection.getConnection();
         try {
-            // Disable auto-commit so we control when the transaction is committed
             conn.setAutoCommit(false);
 
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -39,7 +37,6 @@ public class CustomerDAO implements GenericDAO<Customer> {
 
         } catch (SQLException e) {
             conn.rollback();
-            // Translate database constraint errors into friendly messages
             throw new SQLException(friendlyError(e));
         } finally {
             conn.setAutoCommit(true);
@@ -47,7 +44,6 @@ public class CustomerDAO implements GenericDAO<Customer> {
         }
     }
 
-    // Kept for GenericDAO interface - delegates to the full version with empty pin
     @Override
     public int save(Customer customer) throws SQLException {
         return save(customer, "");
@@ -99,7 +95,6 @@ public class CustomerDAO implements GenericDAO<Customer> {
         }
     }
 
-    // Login by phone + PIN, also checks if account is locked
     public Customer findByPhoneAndPin(String phone, String pin) throws SQLException {
         String sql = "SELECT * FROM customers WHERE phone_number = ? AND pin = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -124,7 +119,6 @@ public class CustomerDAO implements GenericDAO<Customer> {
         }
     }
 
-    // Find by phone only - used to check lock status before verifying PIN
     public Customer findByPhone(String phone) throws SQLException {
         String sql = "SELECT * FROM customers WHERE phone_number = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -137,16 +131,25 @@ public class CustomerDAO implements GenericDAO<Customer> {
     }
 
     public void updatePin(int customerId, String newPin) throws SQLException {
-        String sql = "UPDATE customers SET pin = ?, failed_attempts = 0 WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, newPin);
-            stmt.setInt(2, customerId);
-            stmt.executeUpdate();
+        try {
+            String sql = "UPDATE customers SET pin = ?, failed_attempts = 0 WHERE id = ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, newPin);
+                stmt.setInt(2, customerId);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            String sql = "UPDATE customers SET pin = ? WHERE id = ?";
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, newPin);
+                stmt.setInt(2, customerId);
+                stmt.executeUpdate();
+            }
         }
     }
 
-    // Increments failed login attempts - called on wrong PIN
     public void incrementFailedAttempts(int customerId) throws SQLException {
         String sql = "UPDATE customers SET failed_attempts = failed_attempts + 1 WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -156,7 +159,6 @@ public class CustomerDAO implements GenericDAO<Customer> {
         }
     }
 
-    // Locks the account after too many failed attempts
     public void lockAccount(int customerId) throws SQLException {
         String sql = "UPDATE customers SET is_locked = TRUE WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -166,13 +168,23 @@ public class CustomerDAO implements GenericDAO<Customer> {
         }
     }
 
-    // Resets failed attempts on successful login
     public void resetFailedAttempts(int customerId) throws SQLException {
         String sql = "UPDATE customers SET failed_attempts = 0, is_locked = FALSE WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, customerId);
             stmt.executeUpdate();
+        }
+    }
+
+    public String findRoleByPhone(String phone) throws SQLException {
+        String sql = "SELECT role FROM customers WHERE phone_number = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("role");
+            return "USER";
         }
     }
 
@@ -185,18 +197,14 @@ public class CustomerDAO implements GenericDAO<Customer> {
         );
     }
 
-    // Converts raw PostgreSQL error messages into user-friendly ones
     private String friendlyError(SQLException e) {
         String msg = e.getMessage().toLowerCase();
-        if (msg.contains("phone_number") && msg.contains("unique")) {
+        if (msg.contains("phone_number") && msg.contains("unique"))
             return "This phone number is already registered. Please use a different number.";
-        }
-        if (msg.contains("email") && msg.contains("unique")) {
+        if (msg.contains("email") && msg.contains("unique"))
             return "This email address is already registered. Please use a different email.";
-        }
-        if (msg.contains("pin") && msg.contains("not-null")) {
+        if (msg.contains("pin") && msg.contains("not-null"))
             return "PIN is required. Please enter a 5-digit PIN.";
-        }
         return "Registration failed. Please check your details and try again.";
     }
 }

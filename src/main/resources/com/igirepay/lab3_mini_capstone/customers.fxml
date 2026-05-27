@@ -26,7 +26,7 @@
                         style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 16;
                                -fx-padding: 5 10 5 10; -fx-cursor: hand; -fx-font-weight: bold;"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Label text="Customers"
+                <Label text="Profile"
                        style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: #1A1A2E;"/>
                 <Region HBox.hgrow="ALWAYS"/>
             </HBox>
@@ -36,7 +36,7 @@
                                -fx-border-color: transparent;">
                 <VBox spacing="14" style="-fx-padding: 16 16 16 16;">
 
-                    <!-- MY PROFILE CARD - shows logged-in customer -->
+                    <!-- MY PROFILE CARD -->
                     <VBox style="-fx-background-color: #1A1A2E; -fx-background-radius: 16;
                                  -fx-padding: 16;" spacing="8">
                         <Label text="My Profile"
@@ -51,50 +51,27 @@
                                style="-fx-text-fill: #666666; -fx-font-size: 11px;"/>
                     </VBox>
 
-                    <!-- FIND CUSTOMER CARD -->
+                    <!-- UPDATE MY PROFILE CARD -->
                     <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
                                  -fx-padding: 16;
                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
                           spacing="12">
-                        <Label text="Find Customer"
-                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
-                        <HBox spacing="10">
-                            <TextField fx:id="searchIdField" promptText="Customer ID"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
-                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <Button text="Find" onAction="#handleFind"
-                                    style="-fx-background-color: #1A1A2E; -fx-text-fill: #FFFFFF;
-                                           -fx-font-weight: bold; -fx-background-radius: 8;
-                                           -fx-padding: 9 16 9 16; -fx-cursor: hand;"/>
-                        </HBox>
-                        <VBox fx:id="foundCustomerBox" spacing="4" managed="false" visible="false"
-                              style="-fx-background-color: #F8F9FA; -fx-background-radius: 8; -fx-padding: 10;">
-                            <Label fx:id="foundNameLabel"  text="" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                            <Label fx:id="foundEmailLabel" text="" style="-fx-font-size: 12px; -fx-text-fill: #555555;"/>
-                            <Label fx:id="foundPhoneLabel" text="" style="-fx-font-size: 12px; -fx-text-fill: #555555;"/>
-                        </VBox>
-                        <Label fx:id="findMessageLabel" text="" style="-fx-font-size: 12px;"/>
-                    </VBox>
-
-                    <!-- UPDATE CUSTOMER CARD -->
-                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
-                                 -fx-padding: 16;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
-                          spacing="12">
-                        <Label text="Update Customer"
+                        <Label text="Update My Profile"
                                style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
                         <VBox spacing="8">
-                            <TextField fx:id="updateIdField"    promptText="Customer ID"
+                            <!-- ID is read-only - a customer cannot change their own ID -->
+                            <TextField fx:id="updateIdField" promptText="Customer ID"
+                                       editable="false"
+                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;
+                                              -fx-background-color: #F5F5F5; -fx-text-fill: #888888;"/>
+                            <TextField fx:id="updateNameField" promptText="Full name"
                                        style="-fx-background-radius: 8; -fx-border-radius: 8;
                                               -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <TextField fx:id="updateNameField"  promptText="New full name"
+                            <TextField fx:id="updateEmailField" promptText="Email"
                                        style="-fx-background-radius: 8; -fx-border-radius: 8;
                                               -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <TextField fx:id="updateEmailField" promptText="New email"
-                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
-                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <TextField fx:id="updatePhoneField" promptText="New phone number"
+                            <TextField fx:id="updatePhoneField" promptText="Phone number"
                                        style="-fx-background-radius: 8; -fx-border-radius: 8;
                                               -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
                         </VBox>

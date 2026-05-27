@@ -39,4 +39,8 @@ build/
 
 ### Generated log files ###
 *.txt
+*.csv
+
+### Personal study notes - do not commit ###
+STUDY_NOTES.md
 

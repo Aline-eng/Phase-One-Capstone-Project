@@ -20,19 +20,16 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HistoryController {
 
     @FXML private TextField filterAccountId;
-    @FXML private TextField searchField;
     @FXML private Label summaryLabel;
     @FXML private VBox transactionListBox;
 
     private final JdbcWalletService service = new JdbcWalletService();
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd MMM yyyy  HH:mm");
 
-    // Holds the full list so we can filter without re-querying the database
     private List<Transaction> allTransactions;
 
     @FXML
@@ -61,7 +58,6 @@ public class HistoryController {
         try {
             int accountId = Integer.parseInt(idText);
 
-            // Verify this account belongs to the logged-in customer
             Customer customer = SessionManager.getInstance().getCurrentCustomer();
             List<Account> myAccounts = service.findAccountsByCustomer(customer.getCustomerId());
             boolean ownsAccount = myAccounts.stream()
@@ -75,7 +71,6 @@ public class HistoryController {
                 return;
             }
 
-            // Check the account type so we can show a meaningful message
             Account account = service.findAccount(accountId);
             String accountType = account != null ? account.getAccountType() : "Unknown";
 
@@ -95,36 +90,10 @@ public class HistoryController {
         } catch (NumberFormatException e) {
             summaryLabel.setText("Account ID must be a number.");
         } catch (Exception e) {
-            summaryLabel.setText("Error loading history: " + e.getMessage());
+            summaryLabel.setText("Error: " + e.getMessage());
         }
     }
 
-    // Filters the already-loaded list by reference ID or type - no new DB query needed
-    @FXML
-    private void handleSearch() {
-        if (allTransactions == null) return;
-        String query = searchField.getText().trim().toUpperCase();
-        if (query.isEmpty()) {
-            renderTransactions(allTransactions,
-                    Integer.parseInt(filterAccountId.getText().trim()), "");
-            return;
-        }
-        List<Transaction> filtered = allTransactions.stream()
-                .filter(t -> t.getReferenceId().contains(query)
-                          || t.getTransactionType().name().contains(query))
-                .collect(Collectors.toList());
-
-        transactionListBox.getChildren().clear();
-        if (filtered.isEmpty()) {
-            transactionListBox.getChildren().add(noTransactionsLabel(
-                "No transactions match \"" + query + "\"."));
-        } else {
-            filtered.forEach(t -> transactionListBox.getChildren().add(buildRow(t)));
-        }
-        summaryLabel.setText("Showing " + filtered.size() + " of " + allTransactions.size() + " transactions");
-    }
-
-    // Exports the current transaction list to a CSV file
     @FXML
     private void handleExportCsv() {
         if (allTransactions == null || allTransactions.isEmpty()) {
@@ -151,8 +120,7 @@ public class HistoryController {
     private void renderTransactions(List<Transaction> transactions, int accountId, String accountType) {
         double totalIn = 0, totalOut = 0;
         for (Transaction t : transactions) {
-            boolean in = t.getTransactionType().name().contains("DEPOSIT")
-                      || t.getTransactionType().name().contains("_IN");
+            boolean in = isIncoming(t);
             if (in) totalIn += t.getAmount(); else totalOut += t.getAmount();
         }
         summaryLabel.setText(String.format(
@@ -169,29 +137,39 @@ public class HistoryController {
         row.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 10; -fx-padding: 12 14 12 14;");
         VBox.setMargin(row, new javafx.geometry.Insets(0, 0, 6, 0));
 
-        boolean incoming = t.getTransactionType().name().contains("DEPOSIT")
-                        || t.getTransactionType().name().contains("_IN");
+        boolean incoming = isIncoming(t);
+
+        // Icon - handle TRANSFER legacy type gracefully
         String icon = switch (t.getTransactionType()) {
             case DEPOSIT      -> "⬇";
             case WITHDRAW     -> "⬆";
             case TRANSFER_OUT -> "↗";
             case TRANSFER_IN  -> "↙";
+            case TRANSFER     -> "↔"; // legacy records
         };
 
         Label iconLabel = new Label(icon);
         iconLabel.setStyle("-fx-background-color: " + (incoming ? "#E8F5E9" : "#FFF3E0")
                 + "; -fx-background-radius: 20; -fx-padding: 8 10 8 10; -fx-font-size: 14px;");
 
+        // Left: type label + reference + from/to info
         VBox left = new VBox(2);
         Label typeLabel = new Label(t.getTransactionType().name().replace("_", " "));
         typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1A1A2E;");
         Label refLabel = new Label(t.getReferenceId());
         refLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #AAAAAA;");
-        left.getChildren().addAll(typeLabel, refLabel);
+
+        // From/To line - shows which customer phone is involved
+        String fromTo = getFromToLabel(t);
+        Label fromToLabel = new Label(fromTo);
+        fromToLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #888888;");
+
+        left.getChildren().addAll(typeLabel, refLabel, fromToLabel);
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
+        // Right: amount + date
         VBox right = new VBox(2);
         right.setAlignment(Pos.CENTER_RIGHT);
         Label amountLabel = new Label((incoming ? "+" : "-") + String.format("%,.0f RWF", t.getAmount()));
@@ -203,6 +181,25 @@ public class HistoryController {
 
         row.getChildren().addAll(iconLabel, left, spacer, right);
         return row;
+    }
+
+    // Builds the From/To line shown under the reference ID in each transaction row
+    private String getFromToLabel(Transaction t) {
+        Customer me = SessionManager.getInstance().getCurrentCustomer();
+        String myPhone = me != null ? me.getPhoneNumber() : "Me";
+
+        return switch (t.getTransactionType()) {
+            case DEPOSIT      -> "To: " + myPhone;
+            case WITHDRAW     -> "From: " + myPhone;
+            case TRANSFER_OUT -> "From: " + myPhone;
+            case TRANSFER_IN  -> "To: " + myPhone;
+            case TRANSFER     -> "Transfer";
+        };
+    }
+
+    private boolean isIncoming(Transaction t) {
+        String name = t.getTransactionType().name();
+        return name.contains("DEPOSIT") || name.contains("_IN");
     }
 
     private Label noTransactionsLabel(String message) {

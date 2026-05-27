@@ -21,6 +21,7 @@ public class DashboardController {
     @FXML private Label balanceLabel;
     @FXML private Label accountTypeLabel;
     @FXML private VBox recentTransactionsBox;
+    @FXML private javafx.scene.control.Button adminPanelBtn;
 
     private final JdbcWalletService service = new JdbcWalletService();
 
@@ -29,8 +30,13 @@ public class DashboardController {
         Customer customer = SessionManager.getInstance().getCurrentCustomer();
         if (customer == null) return;
 
-        // Show phone number on the balance card
         phoneLabel.setText(customer.getPhoneNumber());
+
+        // Show admin panel button only if the logged-in user is an admin
+        if (SessionManager.getInstance().isAdmin()) {
+            adminPanelBtn.setVisible(true);
+            adminPanelBtn.setManaged(true);
+        }
 
         loadBalances(customer);
         loadRecentTransactions(customer);
@@ -93,10 +99,11 @@ public class DashboardController {
 
         // Icon based on transaction type
         String icon = switch (t.getTransactionType()) {
-            case DEPOSIT -> "⬇";
-            case WITHDRAW -> "⬆";
+            case DEPOSIT      -> "⬇";
+            case WITHDRAW     -> "⬆";
             case TRANSFER_OUT -> "↗";
-            case TRANSFER_IN -> "↙";
+            case TRANSFER_IN  -> "↙";
+            case TRANSFER     -> "↔";
         };
 
         // Icon circle
@@ -161,6 +168,13 @@ public class DashboardController {
     @FXML private void showProfile()       { navigate("customers"); }
     @FXML private void showNotifications() { navigate("history"); }
     @FXML private void showBuy()           { navigate("buy"); }
+    @FXML private void showAdminPanel()    { navigate("admin"); }
+
+    @FXML
+    private void handleLogout() {
+        SessionManager.getInstance().clear();
+        navigate("login");
+    }
 
     private void navigate(String screen) {
         try { SceneManager.switchTo(screen); }

@@ -76,6 +76,14 @@
                                            -fx-cursor: hand;"
                                     HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                         </HBox>
+                        <!-- Admin panel button - only visible for ADMIN role -->
+                        <Button fx:id="adminPanelBtn" text="🛡 Admin Panel" onAction="#showAdminPanel"
+                                managed="false" visible="false"
+                                style="-fx-background-color: #E53935; -fx-text-fill: #FFFFFF;
+                                       -fx-font-weight: bold; -fx-font-size: 11px;
+                                       -fx-background-radius: 8; -fx-padding: 8 12 8 12;
+                                       -fx-cursor: hand; -fx-margin: 8 0 0 0;"
+                                maxWidth="Infinity"/>
                     </VBox>
 
                     <!-- PAY & BUY SECTION -->

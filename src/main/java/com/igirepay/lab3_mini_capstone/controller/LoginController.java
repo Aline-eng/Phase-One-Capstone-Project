@@ -56,7 +56,14 @@ public class LoginController {
             }
 
             SessionManager.getInstance().setCurrentCustomer(customer);
-            SceneManager.switchTo("dashboard");
+            String role = service.getRoleByPhone(phone);
+            SessionManager.getInstance().setRole(role);
+            // Route to different screens based on role
+            if (SessionManager.getInstance().isAdmin()) {
+                SceneManager.switchTo("admin");
+            } else {
+                SceneManager.switchTo("dashboard");
+            }
 
         } catch (Exception e) {
             showError("Login failed: " + e.getMessage());
