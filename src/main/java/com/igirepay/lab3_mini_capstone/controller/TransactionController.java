@@ -16,6 +16,7 @@ public class TransactionController {
     @FXML private TextField referenceField;
     @FXML private TextField receiverField;
     @FXML private VBox receiverBox;
+    @FXML private VBox savingsInfoBox;
     @FXML private Label feeInfoLabel;
     @FXML private Label messageLabel;
     @FXML private Button submitButton;
@@ -32,7 +33,27 @@ public class TransactionController {
     public void initialize() {
         // Show fee info when amount changes so user knows what they'll be charged
         amountField.textProperty().addListener((obs, oldVal, newVal) -> updateFeeInfo(newVal));
+        // Show savings info when account ID changes
+        accountIdField.textProperty().addListener((obs, oldVal, newVal) -> checkAccountType(newVal));
         switchToDeposit();
+    }
+
+    // Shows savings account rules when a savings account ID is entered
+    private void checkAccountType(String accountIdText) {
+        try {
+            if (accountIdText.isEmpty()) {
+                savingsInfoBox.setVisible(false);
+                savingsInfoBox.setManaged(false);
+                return;
+            }
+            Account acc = service.findAccount(Integer.parseInt(accountIdText));
+            boolean isSavings = acc != null && acc.getAccountType().equals("Savings");
+            savingsInfoBox.setVisible(isSavings);
+            savingsInfoBox.setManaged(isSavings);
+        } catch (Exception e) {
+            savingsInfoBox.setVisible(false);
+            savingsInfoBox.setManaged(false);
+        }
     }
 
     // ===== TAB SWITCHING =====

@@ -1,7 +1,5 @@
 package com.igirepay.lab1_oop.model;
 
-// Abstract class - cannot be instantiated directly.
-// WalletAccount and SavingsAccount will extend this.
 public abstract class Account {
     private int accountId;
     private double balance;
@@ -13,13 +11,10 @@ public abstract class Account {
         this.accountType = accountType;
     }
 
-    // Deposit is the same for all account types, so we define it here once
     public void deposit(double amount) {
         balance += amount;
     }
 
-    // withdraw and processTransaction behave differently per account type,
-    // so subclasses must provide their own implementation (polymorphism)
     public abstract void withdraw(double amount) throws Exception;
     public abstract void processTransaction(double amount) throws Exception;
 

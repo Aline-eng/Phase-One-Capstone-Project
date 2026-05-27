@@ -117,16 +117,16 @@ public class TransactionDAO implements GenericDAO<Transaction> {
         throw new UnsupportedOperationException("Transactions cannot be deleted.");
     }
 
-    // Private helper - converts one ResultSet row into a Transaction object.
-    // TransactionType.valueOf() converts the stored String back to the enum constant.
-    // "DEPOSIT" → TransactionType.DEPOSIT
-    // This is the reverse of what .name() did when we saved it.
+    // Uses the 5-argument constructor that accepts a stored timestamp.
+    // This is critical - without it every loaded transaction would show
+    // LocalDateTime.now() as its time, making all history appear identical.
     private Transaction mapRow(ResultSet rs) throws SQLException {
         return new Transaction(
                 rs.getInt("id"),
                 rs.getString("reference_id"),
                 rs.getDouble("amount"),
-                TransactionType.valueOf(rs.getString("transaction_type"))
+                TransactionType.valueOf(rs.getString("transaction_type")),
+                rs.getTimestamp("created_at").toLocalDateTime()
         );
     }
 }

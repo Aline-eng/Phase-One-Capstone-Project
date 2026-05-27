@@ -32,10 +32,11 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label text="IgirePay" style="-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #1A1A2E;"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <!-- Notification right -->
-                <Button text="🔔" onAction="#showNotifications"
+                <!-- Logout right -->
+                <Button text="🔒 Logout" onAction="#handleLogout"
                         style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 20;
-                               -fx-padding: 6 10 6 10; -fx-cursor: hand; -fx-font-size: 14px;"/>
+                               -fx-padding: 6 10 6 10; -fx-cursor: hand; -fx-font-size: 11px;
+                               -fx-text-fill: #1A1A2E; -fx-font-weight: bold;"/>
             </HBox>
 
             <!-- Scrollable content -->
@@ -75,6 +76,14 @@
                                            -fx-cursor: hand;"
                                     HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                         </HBox>
+                        <!-- Admin panel button - only visible for ADMIN role -->
+                        <Button fx:id="adminPanelBtn" text="🛡 Admin Panel" onAction="#showAdminPanel"
+                                managed="false" visible="false"
+                                style="-fx-background-color: #E53935; -fx-text-fill: #FFFFFF;
+                                       -fx-font-weight: bold; -fx-font-size: 11px;
+                                       -fx-background-radius: 8; -fx-padding: 8 12 8 12;
+                                       -fx-cursor: hand; -fx-margin: 8 0 0 0;"
+                                maxWidth="Infinity"/>
                     </VBox>
 
                     <!-- PAY & BUY SECTION -->
@@ -128,12 +137,12 @@
                                 <Label text="Savings" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
                             </VBox>
                             <VBox GridPane.columnIndex="2" GridPane.rowIndex="1"
-                                  onMouseClicked="#showCustomers"
+                                  onMouseClicked="#showBuy"
                                   style="-fx-background-color: #FCE4EC; -fx-background-radius: 12;
                                          -fx-padding: 14; -fx-alignment: CENTER; -fx-cursor: hand;
                                          -fx-pref-width: 90; -fx-pref-height: 80;" spacing="6">
-                                <Label text="👥" style="-fx-font-size: 22px;"/>
-                                <Label text="Customers" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                                <Label text="🛒" style="-fx-font-size: 22px;"/>
+                                <Label text="Buy" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
                             </VBox>
                         </GridPane>
                     </VBox>
@@ -189,9 +198,9 @@
                     <Label text="MomoPay" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
                 </VBox>
 
-                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#showAccounts"
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#showBuy"
                       style="-fx-cursor: hand; -fx-padding: 4;">
-                    <Label text="🏦" style="-fx-font-size: 18px;"/>
+                    <Label text="🛒" style="-fx-font-size: 18px;"/>
                     <Label text="Buy" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
                 </VBox>
 

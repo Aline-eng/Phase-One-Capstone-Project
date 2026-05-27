@@ -8,14 +8,14 @@ public class Customer {
     private String fullName;
     private String email;
     private String phoneNumber;
-    private List<Account> accounts; // a customer can have multiple accounts
+    private List<Account> accounts;
 
     public Customer(int customerId, String fullName, String email, String phoneNumber) {
         this.customerId = customerId;
         this.fullName = fullName;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.accounts = new ArrayList<>(); // ArrayList because order matters and we may need index access
+        this.accounts = new ArrayList<>();
     }
 
     public void addAccount(Account account) {

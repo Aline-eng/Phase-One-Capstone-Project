@@ -48,13 +48,16 @@
                                        -fx-font-weight: bold; -fx-background-radius: 8;
                                        -fx-padding: 8 16 8 16; -fx-cursor: hand;"/>
                     </VBox>
+                    <VBox spacing="4" alignment="BOTTOM_LEFT">
+                        <Label text=" " style="-fx-font-size: 11px;"/>
+                        <Button text="📥 CSV" onAction="#handleExportCsv"
+                                style="-fx-background-color: #43A047; -fx-text-fill: #FFFFFF;
+                                       -fx-font-size: 11px; -fx-font-weight: bold;
+                                       -fx-background-radius: 8; -fx-padding: 8 10 8 10; -fx-cursor: hand;"/>
+                    </VBox>
                 </HBox>
-
-                <!-- Summary row -->
-                <HBox spacing="8">
-                    <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
-                           style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
-                </HBox>
+                <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
+                       style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
             </VBox>
 
             <!-- TRANSACTION LIST -->

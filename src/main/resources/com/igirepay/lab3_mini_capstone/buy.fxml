@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.igirepay.lab3_mini_capstone.controller.BuyController"
+           prefWidth="1000" prefHeight="660"
+           style="-fx-background-color: #0D0D1A;">
+
+    <VBox alignment="CENTER" maxWidth="380" maxHeight="640"
+          style="-fx-background-color: #1A1A1A; -fx-background-radius: 40;
+                 -fx-padding: 12;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0, 0, 10);">
+
+        <VBox style="-fx-background-color: #F0F2F5; -fx-background-radius: 32;"
+              prefWidth="356" prefHeight="600">
+
+            <!-- TOP BAR -->
+            <HBox style="-fx-background-color: #FFCC00; -fx-background-radius: 32 32 0 0;
+                         -fx-padding: 14 20 14 20;"
+                  alignment="CENTER_LEFT" spacing="12">
+                <Button text="←" onAction="#goBack"
+                        style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 16;
+                               -fx-padding: 5 10 5 10; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Buy" style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: #1A1A2E;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-background: transparent;
+                               -fx-border-color: transparent;">
+                <VBox spacing="14" style="-fx-padding: 16 16 16 16;">
+
+                    <!-- Account selector -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-padding: 14;" spacing="8">
+                        <Label text="Pay from Account" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TextField fx:id="accountIdField" promptText="Enter your account ID"
+                                   style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
+                    </VBox>
+
+                    <!-- AIRTIME -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="12">
+                        <Label text="📱 Airtime" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                        <HBox spacing="10">
+                            <Button text="100 RWF" onAction="#buyAirtime100"
+                                    style="-fx-background-color: #FFF8E1; -fx-text-fill: #1A1A2E;
+                                           -fx-font-weight: bold; -fx-background-radius: 8;
+                                           -fx-padding: 10 0 10 0; -fx-cursor: hand;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="500 RWF" onAction="#buyAirtime500"
+                                    style="-fx-background-color: #FFF8E1; -fx-text-fill: #1A1A2E;
+                                           -fx-font-weight: bold; -fx-background-radius: 8;
+                                           -fx-padding: 10 0 10 0; -fx-cursor: hand;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="1000 RWF" onAction="#buyAirtime1000"
+                                    style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                           -fx-font-weight: bold; -fx-background-radius: 8;
+                                           -fx-padding: 10 0 10 0; -fx-cursor: hand;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- BUNDLES -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="12">
+                        <Label text="📦 Bundles" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                        <GridPane hgap="10" vgap="10">
+                            <Button GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                    text="Daily 50MB&#10;200 RWF" onAction="#buyBundle200"
+                                    style="-fx-background-color: #E3F2FD; -fx-text-fill: #1A1A2E;
+                                           -fx-background-radius: 10; -fx-padding: 12 8 12 8;
+                                           -fx-cursor: hand; -fx-font-size: 11px;"
+                                    maxWidth="Infinity" GridPane.hgrow="ALWAYS"/>
+                            <Button GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                    text="Weekly 500MB&#10;1000 RWF" onAction="#buyBundle1000"
+                                    style="-fx-background-color: #E3F2FD; -fx-text-fill: #1A1A2E;
+                                           -fx-background-radius: 10; -fx-padding: 12 8 12 8;
+                                           -fx-cursor: hand; -fx-font-size: 11px;"
+                                    maxWidth="Infinity" GridPane.hgrow="ALWAYS"/>
+                            <Button GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                    text="Monthly 2GB&#10;3000 RWF" onAction="#buyBundle3000"
+                                    style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                           -fx-font-weight: bold; -fx-background-radius: 10;
+                                           -fx-padding: 12 8 12 8; -fx-cursor: hand; -fx-font-size: 11px;"
+                                    maxWidth="Infinity" GridPane.hgrow="ALWAYS"/>
+                            <Button GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                    text="Monthly 5GB&#10;5000 RWF" onAction="#buyBundle5000"
+                                    style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                           -fx-font-weight: bold; -fx-background-radius: 10;
+                                           -fx-padding: 12 8 12 8; -fx-cursor: hand; -fx-font-size: 11px;"
+                                    maxWidth="Infinity" GridPane.hgrow="ALWAYS"/>
+                        </GridPane>
+                    </VBox>
+
+                    <!-- INTERNET PACKS -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="12">
+                        <Label text="🌐 Internet Packs" style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                        <HBox spacing="10">
+                            <Button text="Night Pack&#10;500 RWF" onAction="#buyNightPack"
+                                    style="-fx-background-color: #F3E5F5; -fx-text-fill: #1A1A2E;
+                                           -fx-background-radius: 10; -fx-padding: 12 0 12 0;
+                                           -fx-cursor: hand; -fx-font-size: 11px;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button text="Social Pack&#10;300 RWF" onAction="#buySocialPack"
+                                    style="-fx-background-color: #F3E5F5; -fx-text-fill: #1A1A2E;
+                                           -fx-background-radius: 10; -fx-padding: 12 0 12 0;
+                                           -fx-cursor: hand; -fx-font-size: 11px;"
+                                    HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Message -->
+                    <Label fx:id="messageLabel" text="" wrapText="true"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold;" maxWidth="Infinity"/>
+
+                </VBox>
+            </ScrollPane>
+
+            <!-- BOTTOM NAV -->
+            <HBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 32 32;
+                         -fx-padding: 10 8 14 8;" alignment="CENTER" spacing="0">
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHome"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🏠" style="-fx-font-size: 18px;"/>
+                    <Label text="Home" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goTransactions"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="💸" style="-fx-font-size: 18px;"/>
+                    <Label text="Send" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goTransactions"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <StackPane>
+                        <Circle radius="26" style="-fx-fill: #FFCC00;"/>
+                        <Label text="💳" style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <Label text="MomoPay" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🛒" style="-fx-font-size: 18px;"/>
+                    <Label text="Buy" style="-fx-font-size: 9px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHistory"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="⋯" style="-fx-font-size: 20px; -fx-text-fill: #888888;"/>
+                    <Label text="More" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </VBox>
+</StackPane>
