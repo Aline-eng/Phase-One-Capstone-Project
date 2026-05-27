@@ -1,9 +1,12 @@
 package com.igirepay.lab3_mini_capstone;
 
+import com.igirepay.Launcher;
+
 public class Lab3Runner {
+
+    // Launches the JavaFX GUI application.
+    // Called from Main.java when running Lab 3.
     public static void run() {
-        System.out.println("========== LAB 3: JavaFX App ==========");
-        System.out.println("Lab 3 coming soon...");
-        System.out.println("========== LAB 3 END ==========\n");
+        Launcher.main(new String[]{});
     }
 }

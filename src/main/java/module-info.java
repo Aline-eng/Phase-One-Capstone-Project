@@ -6,7 +6,6 @@ module com.igirepay {
     requires java.sql;
 
     // Opens packages to javafx.fxml so it can inject @FXML fields into controllers
-    opens com.igirepay to javafx.fxml;
     opens com.igirepay.lab3_mini_capstone to javafx.fxml;
     opens com.igirepay.lab3_mini_capstone.controller to javafx.fxml;
 

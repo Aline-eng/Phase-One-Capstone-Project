@@ -5,33 +5,35 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
-// SceneManager handles all screen navigation in one place.
-// Any controller calls SceneManager.switchTo("dashboard") to navigate.
-// This means controllers never need to know where FXML files are stored.
 public class SceneManager {
 
     private static Stage primaryStage;
 
-    // Called once at app startup to give SceneManager access to the main window
     public static void setPrimaryStage(Stage stage) {
         primaryStage = stage;
     }
 
-    // Loads an FXML file and replaces the current scene
     public static void switchTo(String fxmlName) throws IOException {
-        FXMLLoader loader = new FXMLLoader(
-                SceneManager.class.getResource(
-                        "/com/igirepay/lab3_mini_capstone/" + fxmlName + ".fxml"
-                )
-        );
+        String path = "/com/igirepay/lab3_mini_capstone/" + fxmlName + ".fxml";
+        URL fxmlUrl = SceneManager.class.getResource(path);
+
+        // If the FXML file is not found, give a clear message instead of NullPointerException
+        if (fxmlUrl == null) {
+            throw new IOException("Screen not found: " + path
+                + ". Make sure the FXML file exists in resources.");
+        }
+
+        FXMLLoader loader = new FXMLLoader(fxmlUrl);
         Scene scene = new Scene(loader.load());
-        // Load our CSS stylesheet into every scene
-        scene.getStylesheets().add(
-                SceneManager.class.getResource(
-                        "/com/igirepay/lab3_mini_capstone/css/style.css"
-                ).toExternalForm()
-        );
+
+        URL cssUrl = SceneManager.class.getResource(
+                "/com/igirepay/lab3_mini_capstone/css/style.css");
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+        }
+
         primaryStage.setScene(scene);
         primaryStage.show();
     }
