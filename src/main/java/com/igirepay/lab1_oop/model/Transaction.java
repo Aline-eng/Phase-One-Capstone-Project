@@ -5,17 +5,30 @@ import java.time.LocalDateTime;
 
 public class Transaction {
     private int transactionId;
-    private String referenceId;   // unique ID used to detect duplicate transactions
+    private String referenceId;
     private double amount;
     private TransactionType transactionType;
     private LocalDateTime timestamp;
 
+    // Used when CREATING a new transaction - timestamp is set to right now
     public Transaction(int transactionId, String referenceId, double amount, TransactionType transactionType) {
         this.transactionId = transactionId;
         this.referenceId = referenceId;
         this.amount = amount;
         this.transactionType = transactionType;
-        this.timestamp = LocalDateTime.now(); // automatically set when transaction is created
+        this.timestamp = LocalDateTime.now();
+    }
+
+    // Used when LOADING a transaction from the database - timestamp comes from the stored value.
+    // Without this constructor, every loaded transaction would get LocalDateTime.now()
+    // as its timestamp, making all past transactions appear to have the same time.
+    public Transaction(int transactionId, String referenceId, double amount,
+                       TransactionType transactionType, LocalDateTime timestamp) {
+        this.transactionId = transactionId;
+        this.referenceId = referenceId;
+        this.amount = amount;
+        this.transactionType = transactionType;
+        this.timestamp = timestamp;
     }
 
     public int getTransactionId() { return transactionId; }

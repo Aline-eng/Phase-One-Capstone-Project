@@ -154,25 +154,13 @@ public class DashboardController {
     @FXML private void showWithdraw() {
         navigate("transactions");
     }
-    @FXML private void showAccounts() {
-        navigate("accounts");
-    }
-    @FXML private void showCustomers() {
-        navigate("customers");
-    }
-    @FXML private void showSavings() {
-        navigate("accounts");
-    }
-    @FXML private void showMore() {
-        navigate("customers");
-    }
-    @FXML private void showProfile() {
-        navigate("customers");
-    }
-    @FXML private void showNotifications() {
-        // Placeholder - shows history as notifications for now
-        navigate("history");
-    }
+    @FXML private void showAccounts()     { navigate("accounts"); }
+    @FXML private void showCustomers()     { navigate("customers"); }
+    @FXML private void showSavings()       { navigate("accounts"); }
+    @FXML private void showMore()          { navigate("customers"); }
+    @FXML private void showProfile()       { navigate("customers"); }
+    @FXML private void showNotifications() { navigate("history"); }
+    @FXML private void showBuy()           { navigate("buy"); }
 
     private void navigate(String screen) {
         try { SceneManager.switchTo(screen); }

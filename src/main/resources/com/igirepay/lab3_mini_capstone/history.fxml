@@ -50,11 +50,24 @@
                     </VBox>
                 </HBox>
 
-                <!-- Summary row -->
+                <!-- Search/filter by reference or type -->
                 <HBox spacing="8">
-                    <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
-                           style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
+                    <TextField fx:id="searchField" promptText="Search by reference or type..."
+                               HBox.hgrow="ALWAYS"
+                               style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                      -fx-border-color: #E0E0E0; -fx-padding: 7 10 7 10;
+                                      -fx-font-size: 12px;"/>
+                    <Button text="🔍" onAction="#handleSearch"
+                            style="-fx-background-color: #1A1A2E; -fx-text-fill: #FFFFFF;
+                                   -fx-background-radius: 8; -fx-padding: 8 12 8 12; -fx-cursor: hand;"/>
+                    <Button text="📥 CSV" onAction="#handleExportCsv"
+                            style="-fx-background-color: #43A047; -fx-text-fill: #FFFFFF;
+                                   -fx-font-size: 11px; -fx-font-weight: bold;
+                                   -fx-background-radius: 8; -fx-padding: 8 10 8 10; -fx-cursor: hand;"/>
                 </HBox>
+
+                <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
+                       style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
             </VBox>
 
             <!-- TRANSACTION LIST -->

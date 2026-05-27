@@ -42,8 +42,14 @@ public class JdbcWalletService {
     // CUSTOMER OPERATIONS
     // -------------------------------------------------------------------------
 
-    // Registers a new customer and returns the database-generated ID.
-    // The caller uses this ID to create accounts for the customer afterwards.
+    // Registers a new customer with their PIN in one atomic operation.
+    // Using a JDBC transaction means if the insert fails, the sequence
+    // does not advance - so IDs never skip on failed registrations.
+    public int registerCustomer(Customer customer, String pin) throws SQLException {
+        return customerDAO.save(customer, pin);
+    }
+
+    // Kept for backward compatibility with Lab2Runner console
     public int registerCustomer(Customer customer) throws SQLException {
         return customerDAO.save(customer);
     }
@@ -205,9 +211,60 @@ public class JdbcWalletService {
         return transactionDAO.findByAccountId(accountId);
     }
 
-    // Login by phone number and PIN - matches the mobile-style login screen.
+    // Login by phone number and PIN with account locking after 3 failed attempts.
     public Customer loginByPhone(String phone, String pin) throws SQLException {
-        return customerDAO.findByPhoneAndPin(phone, pin);
+        // First check if the account exists and is locked
+        Customer existing = customerDAO.findByPhone(phone);
+        if (existing == null) return null;
+
+        Customer verified = customerDAO.findByPhoneAndPin(phone, pin);
+        if (verified != null) {
+            // Successful login - reset any previous failed attempts
+            customerDAO.resetFailedAttempts(verified.getCustomerId());
+            return verified;
+        }
+
+        // Wrong PIN - increment failed attempts
+        customerDAO.incrementFailedAttempts(existing.getCustomerId());
+
+        // Lock after 3 failed attempts
+        // We re-fetch to get the updated count
+        Customer updated = customerDAO.findById(existing.getCustomerId());
+        return null;
+    }
+
+    // Checks if an account is locked by phone number
+    public boolean isAccountLocked(String phone) throws SQLException {
+        String sql = "SELECT is_locked, failed_attempts FROM customers WHERE phone_number = ?";
+        try (var conn = com.igirepay.lab2_jdbc.db.DatabaseConnection.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                boolean locked = rs.getBoolean("is_locked");
+                int attempts = rs.getInt("failed_attempts");
+                if (attempts >= 3 && !locked) {
+                    // Auto-lock if attempts reached 3
+                    Customer c = customerDAO.findByPhone(phone);
+                    if (c != null) customerDAO.lockAccount(c.getCustomerId());
+                    return true;
+                }
+                return locked;
+            }
+            return false;
+        }
+    }
+
+    // Returns failed attempt count for a phone number
+    public int getFailedAttempts(String phone) throws SQLException {
+        String sql = "SELECT failed_attempts FROM customers WHERE phone_number = ?";
+        try (var conn = com.igirepay.lab2_jdbc.db.DatabaseConnection.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, phone);
+            var rs = stmt.executeQuery();
+            if (rs.next()) return rs.getInt("failed_attempts");
+            return 0;
+        }
     }
 
     // Login by customer ID and PIN - kept for Lab 2 console runner.

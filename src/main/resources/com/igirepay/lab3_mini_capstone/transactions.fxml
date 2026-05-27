@@ -90,6 +90,18 @@
                                           -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;"/>
                     </VBox>
 
+                    <!-- Savings account info - shown when savings account is detected -->
+                    <VBox fx:id="savingsInfoBox" managed="false" visible="false"
+                          style="-fx-background-color: #E3F2FD; -fx-background-radius: 8; -fx-padding: 10;">
+                        <Label text="ℹ Savings Account Rules" style="-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1565C0;"/>
+                        <Label text="• Minimum balance of 500 RWF must always remain"
+                               style="-fx-font-size: 11px; -fx-text-fill: #1565C0;" wrapText="true"/>
+                        <Label text="• Free withdrawals in the last 5 days of the month"
+                               style="-fx-font-size: 11px; -fx-text-fill: #1565C0;" wrapText="true"/>
+                        <Label text="• 8% fee applies on other days"
+                               style="-fx-font-size: 11px; -fx-text-fill: #1565C0;" wrapText="true"/>
+                    </VBox>
+
                     <!-- Fee info label -->
                     <Label fx:id="feeInfoLabel" text=""
                            style="-fx-background-color: #FFF8E1; -fx-background-radius: 8;

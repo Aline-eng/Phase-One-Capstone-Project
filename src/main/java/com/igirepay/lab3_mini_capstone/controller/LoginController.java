@@ -9,17 +9,14 @@ import javafx.scene.control.*;
 
 public class LoginController {
 
-    // Login screen fields
     @FXML private TextField phoneField;
     @FXML private PasswordField pinField;
 
-    // Setup screen fields
     @FXML private TextField fullNameField;
     @FXML private TextField emailField;
     @FXML private PasswordField newPinField;
     @FXML private PasswordField confirmPinField;
 
-    // Shared between both screens
     @FXML private Label messageLabel;
 
     private final JdbcWalletService service = new JdbcWalletService();
@@ -33,17 +30,28 @@ public class LoginController {
             showError("Please enter your phone number and PIN.");
             return;
         }
-
         if (!isValidPin(pin)) {
             showError("PIN must be exactly 5 digits.");
             return;
         }
 
         try {
+            // Check if account is locked before attempting login
+            if (service.isAccountLocked(phone)) {
+                showError("Your account is locked after 3 failed attempts.\nPlease contact support to unlock it.");
+                return;
+            }
+
             Customer customer = service.loginByPhone(phone, pin);
 
             if (customer == null) {
-                showError("Invalid phone number or PIN.");
+                int attempts = service.getFailedAttempts(phone);
+                int remaining = 3 - attempts;
+                if (remaining <= 0) {
+                    showError("Your account has been locked after 3 failed attempts.\nPlease contact support.");
+                } else {
+                    showError("Invalid phone number or PIN. " + remaining + " attempt(s) remaining.");
+                }
                 return;
             }
 
@@ -68,53 +76,50 @@ public class LoginController {
             showError("All fields are required.");
             return;
         }
-
         if (!isValidPin(pin)) {
             showError("PIN must be exactly 5 digits (numbers only).");
             return;
         }
-
         if (!pin.equals(confirmPin)) {
             showError("PINs do not match.");
             return;
         }
 
         try {
+            // PIN is included in the same INSERT - no separate update call needed.
+            // This also means if anything fails, the ID does not advance.
             Customer customer = new Customer(0, name, email, phone);
-            int newId = service.registerCustomer(customer);
-            service.updatePin(newId, pin);
-            showSuccess("Account created! Your Customer ID is: " + newId
+            int newId = service.registerCustomer(customer, pin);
+            showSuccess("Account created successfully!\nYour Customer ID is: " + newId
                     + "\nYou can now log in with your phone number and PIN.");
         } catch (Exception e) {
-            showError("Registration failed: " + e.getMessage());
+            // CustomerDAO.friendlyError() already translated the DB error
+            showError(e.getMessage());
         }
     }
 
-    @FXML
-    private void handleGoToSetup() {
+    @FXML private void handleGoToSetup() {
         try { SceneManager.switchTo("setup"); }
         catch (Exception e) { showError("Navigation failed."); }
     }
 
-    @FXML
-    private void handleGoToLogin() {
+    @FXML private void handleGoToLogin() {
         try { SceneManager.switchTo("login"); }
         catch (Exception e) { showError("Navigation failed."); }
     }
 
-    // PIN must be exactly 5 digits - matches MTN MoMo standard
-    // \\d{5} means: exactly 5 characters, all digits 0-9
+    // PIN must be exactly 5 digits - \\d{5} means: 5 characters, all 0-9
     private boolean isValidPin(String pin) {
         return pin.matches("\\d{5}");
     }
 
     private void showError(String message) {
         messageLabel.setText(message);
-        messageLabel.setStyle("-fx-text-fill: #E53935; -fx-font-weight: bold;");
+        messageLabel.setStyle("-fx-text-fill: #E53935; -fx-font-weight: bold; -fx-font-size: 12px;");
     }
 
     private void showSuccess(String message) {
         messageLabel.setText(message);
-        messageLabel.setStyle("-fx-text-fill: #43A047; -fx-font-weight: bold;");
+        messageLabel.setStyle("-fx-text-fill: #43A047; -fx-font-weight: bold; -fx-font-size: 12px;");
     }
 }
