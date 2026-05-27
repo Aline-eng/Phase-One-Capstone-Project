@@ -3,60 +3,87 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
 
-<!-- Dark background fills the whole window -->
+<!-- Dark desktop background -->
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.igirepay.lab3_mini_capstone.controller.LoginController"
-           styleClass="login-root"
-           prefWidth="1000" prefHeight="660">
+           prefWidth="1000" prefHeight="660"
+           style="-fx-background-color: #0D0D1A;">
 
-    <!-- Centered white login card -->
-    <VBox styleClass="login-card" spacing="20" maxWidth="400" maxHeight="520"
-          alignment="CENTER">
+    <!-- Phone frame outer shell -->
+    <VBox alignment="CENTER" maxWidth="360" maxHeight="620"
+          style="-fx-background-color: #1A1A1A;
+                 -fx-background-radius: 40;
+                 -fx-padding: 12;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0, 0, 10);">
 
-        <!-- Logo area -->
-        <VBox alignment="CENTER" spacing="6">
-            <Label text="IgirePay" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #FFCC00;"/>
-            <Label text="Mobile Money" styleClass="login-subtitle"/>
-            <Label text="━━━━━━━━━━━━━━━━━━━━" styleClass="label-muted"/>
-        </VBox>
+        <!-- Phone screen inner area -->
+        <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 32;"
+              prefWidth="336" prefHeight="580">
 
-        <!-- Title -->
-        <VBox alignment="CENTER" spacing="4">
-            <Label text="Welcome Back" styleClass="login-title"/>
-            <Label text="Enter your Customer ID and 5-digit PIN" styleClass="login-subtitle"/>
-        </VBox>
+            <!-- Status bar -->
+            <HBox style="-fx-background-color: #FFCC00; -fx-background-radius: 32 32 0 0; -fx-padding: 10 20 10 20;"
+                  alignment="CENTER">
+                <Label text="IgirePay" style="-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: #1A1A2E;"/>
+            </HBox>
 
-        <!-- Form fields -->
-        <VBox spacing="14">
-            <VBox spacing="6">
-                <Label text="Customer ID" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <TextField fx:id="customerIdField" promptText="Enter your Customer ID"/>
+            <!-- Screen content -->
+            <VBox spacing="24" alignment="CENTER" style="-fx-padding: 32 28 32 28;" VBox.vgrow="ALWAYS">
+
+                <!-- Logo -->
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="🟡" style="-fx-font-size: 48px;"/>
+                    <Label text="IgirePay" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;"/>
+                    <Label text="Mobile Money" style="-fx-font-size: 12px; -fx-text-fill: #888888;"/>
+                </VBox>
+
+                <!-- Form -->
+                <VBox spacing="16" maxWidth="280">
+                    <VBox spacing="6">
+                        <Label text="Phone Number" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #333333;"/>
+                        <TextField fx:id="phoneField" promptText="e.g. 0781000001"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;
+                                          -fx-font-size: 14px;"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="PIN" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #333333;"/>
+                        <PasswordField fx:id="pinField" promptText="5-digit PIN"
+                                       style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                              -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;
+                                              -fx-font-size: 14px;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Message label -->
+                <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="280"
+                       alignment="CENTER" style="-fx-font-size: 12px;"/>
+
+                <!-- Sign in button -->
+                <Button text="SIGN IN" onAction="#handleLogin" maxWidth="280"
+                        style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                               -fx-font-weight: bold; -fx-font-size: 15px;
+                               -fx-background-radius: 10; -fx-padding: 13 0 13 0;
+                               -fx-cursor: hand; -fx-pref-width: 280;
+                               -fx-effect: dropshadow(gaussian, rgba(255,204,0,0.5), 8, 0, 0, 3);"/>
+
+                <!-- Register link -->
+                <VBox alignment="CENTER" spacing="4">
+                    <Label text="Don't have an account?" style="-fx-text-fill: #888888; -fx-font-size: 12px;"/>
+                    <Hyperlink text="Register here" onAction="#handleGoToSetup"
+                               style="-fx-text-fill: #FFCC00; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+                </VBox>
+
             </VBox>
 
-            <VBox spacing="6">
-                <Label text="PIN (5 digits)" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <PasswordField fx:id="pinField" promptText="Enter your 5-digit PIN"/>
-            </VBox>
+            <!-- Bottom home indicator -->
+            <HBox alignment="CENTER" style="-fx-padding: 0 0 12 0;">
+                <Rectangle width="80" height="4" arcWidth="4" arcHeight="4"
+                           style="-fx-fill: #CCCCCC;"/>
+            </HBox>
+
         </VBox>
-
-        <!-- Error message - hidden until needed -->
-        <Label fx:id="messageLabel" text="" styleClass="label-error" wrapText="true"
-               maxWidth="320" alignment="CENTER"/>
-
-        <!-- Login button -->
-        <Button text="LOGIN" styleClass="btn-primary" onAction="#handleLogin"
-                maxWidth="Infinity" style="-fx-font-size: 15px; -fx-padding: 12 0 12 0;"/>
-
-        <!-- Setup PIN link -->
-        <VBox alignment="CENTER" spacing="4">
-            <Label text="New customer?" styleClass="label-muted"/>
-            <Hyperlink fx:id="setupPinLink" text="Register &amp; Set up PIN"
-                       onAction="#handleGoToSetup"
-                       style="-fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
-        </VBox>
-
-        <padding><Insets top="10" bottom="10"/></padding>
     </VBox>
 </StackPane>

@@ -205,9 +205,12 @@ public class JdbcWalletService {
         return transactionDAO.findByAccountId(accountId);
     }
 
-    // Authenticates a customer by ID and PIN.
-    // Returns the Customer object on success, null on failure.
-    // Used by the login screen.
+    // Login by phone number and PIN - matches the mobile-style login screen.
+    public Customer loginByPhone(String phone, String pin) throws SQLException {
+        return customerDAO.findByPhoneAndPin(phone, pin);
+    }
+
+    // Login by customer ID and PIN - kept for Lab 2 console runner.
     public Customer login(int customerId, String pin) throws SQLException {
         return customerDAO.findByIdAndPin(customerId, pin);
     }

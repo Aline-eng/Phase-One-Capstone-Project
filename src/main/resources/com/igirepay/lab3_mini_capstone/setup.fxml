@@ -3,54 +3,87 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <StackPane xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.igirepay.lab3_mini_capstone.controller.LoginController"
-           styleClass="login-root"
-           prefWidth="1000" prefHeight="660">
+           prefWidth="1000" prefHeight="660"
+           style="-fx-background-color: #0D0D1A;">
 
-    <VBox styleClass="login-card" spacing="18" maxWidth="420" maxHeight="600"
-          alignment="CENTER">
+    <!-- Phone frame -->
+    <VBox alignment="CENTER" maxWidth="360" maxHeight="620"
+          style="-fx-background-color: #1A1A1A;
+                 -fx-background-radius: 40;
+                 -fx-padding: 12;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0, 0, 10);">
 
-        <!-- Header -->
-        <VBox alignment="CENTER" spacing="6">
-            <Label text="IgirePay" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FFCC00;"/>
-            <Label text="Create Your Account" styleClass="login-title"/>
-            <Label text="Fill in your details and create a 5-digit PIN" styleClass="login-subtitle"/>
+        <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 32;"
+              prefWidth="336" prefHeight="580">
+
+            <!-- Status bar -->
+            <HBox style="-fx-background-color: #FFCC00; -fx-background-radius: 32 32 0 0; -fx-padding: 10 20 10 20;"
+                  alignment="CENTER_LEFT" spacing="10">
+                <Hyperlink text="←" onAction="#handleGoToLogin"
+                           style="-fx-text-fill: #1A1A2E; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Label text="Create Account" style="-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #1A1A2E;"/>
+            </HBox>
+
+            <!-- Scrollable form content -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;"
+                        VBox.vgrow="ALWAYS">
+                <VBox spacing="14" style="-fx-padding: 24 28 24 28;">
+
+                    <Label text="Join IgirePay" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;"/>
+                    <Label text="Fill in your details below" style="-fx-font-size: 12px; -fx-text-fill: #888888;"/>
+
+                    <VBox spacing="6">
+                        <Label text="Full Name" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <TextField fx:id="fullNameField" promptText="e.g. Alice Uwase"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 9 12 9 12;"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text="Email" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <TextField fx:id="emailField" promptText="e.g. alice@email.com"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 9 12 9 12;"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text="Phone Number" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <TextField fx:id="phoneField" promptText="e.g. 0781000001"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 9 12 9 12;"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text="Create PIN (5 digits)" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <PasswordField fx:id="newPinField" promptText="5-digit PIN"
+                                       style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                              -fx-border-color: #E0E0E0; -fx-padding: 9 12 9 12;"/>
+                    </VBox>
+                    <VBox spacing="6">
+                        <Label text="Confirm PIN" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+                        <PasswordField fx:id="confirmPinField" promptText="Repeat PIN"
+                                       style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                              -fx-border-color: #E0E0E0; -fx-padding: 9 12 9 12;"/>
+                    </VBox>
+
+                    <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="280"
+                           alignment="CENTER" style="-fx-font-size: 12px;"/>
+
+                    <Button text="CREATE ACCOUNT" onAction="#handleRegister" maxWidth="Infinity"
+                            style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                   -fx-font-weight: bold; -fx-font-size: 14px;
+                                   -fx-background-radius: 10; -fx-padding: 12 0 12 0;
+                                   -fx-cursor: hand;"/>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Bottom indicator -->
+            <HBox alignment="CENTER" style="-fx-padding: 0 0 12 0;">
+                <Rectangle width="80" height="4" arcWidth="4" arcHeight="4"
+                           style="-fx-fill: #CCCCCC;"/>
+            </HBox>
+
         </VBox>
-
-        <!-- Registration form -->
-        <VBox spacing="12">
-            <VBox spacing="5">
-                <Label text="Full Name" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <TextField fx:id="fullNameField" promptText="e.g. Alice Uwase"/>
-            </VBox>
-            <VBox spacing="5">
-                <Label text="Email" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <TextField fx:id="emailField" promptText="e.g. alice@email.com"/>
-            </VBox>
-            <VBox spacing="5">
-                <Label text="Phone Number" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <TextField fx:id="phoneField" promptText="e.g. 0781000001"/>
-            </VBox>
-            <VBox spacing="5">
-                <Label text="Create PIN (exactly 5 digits)" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <PasswordField fx:id="newPinField" promptText="5-digit PIN"/>
-            </VBox>
-            <VBox spacing="5">
-                <Label text="Confirm PIN" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
-                <PasswordField fx:id="confirmPinField" promptText="Repeat your PIN"/>
-            </VBox>
-        </VBox>
-
-        <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="360" alignment="CENTER"/>
-
-        <Button text="CREATE ACCOUNT" styleClass="btn-primary" onAction="#handleRegister"
-                maxWidth="Infinity" style="-fx-font-size: 14px; -fx-padding: 12 0 12 0;"/>
-
-        <Hyperlink text="← Back to Login" onAction="#handleGoToLogin"
-                   style="-fx-text-fill: #888888;"/>
-
-        <padding><Insets top="10" bottom="10"/></padding>
     </VBox>
 </StackPane>

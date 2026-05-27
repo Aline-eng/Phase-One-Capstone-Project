@@ -123,6 +123,22 @@ public class CustomerDAO implements GenericDAO<Customer> {
     // Private helper - converts one ResultSet row into a Customer object.
     // Both findById and findAll use this method so the mapping logic
     // is written once. If the Customer constructor changes, we update here only.
+    // Finds a customer by phone number and PIN - used for the mobile-style login.
+    // Phone number is what the user knows, just like MTN MoMo.
+    public Customer findByPhoneAndPin(String phone, String pin) throws SQLException {
+        String sql = "SELECT * FROM customers WHERE phone_number = ? AND pin = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, phone);
+            stmt.setString(2, pin);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return mapRow(rs);
+            return null;
+        }
+    }
+
     // Finds a customer by ID and PIN - used for login authentication.
     // Returns the customer if both match, null if either is wrong.
     // We never tell the user which one is wrong - that would help attackers.
