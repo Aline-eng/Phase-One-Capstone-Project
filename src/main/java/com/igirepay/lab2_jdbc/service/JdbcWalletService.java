@@ -204,4 +204,16 @@ public class JdbcWalletService {
     public List<Transaction> getTransactionHistory(int accountId) throws SQLException {
         return transactionDAO.findByAccountId(accountId);
     }
+
+    // Authenticates a customer by ID and PIN.
+    // Returns the Customer object on success, null on failure.
+    // Used by the login screen.
+    public Customer login(int customerId, String pin) throws SQLException {
+        return customerDAO.findByIdAndPin(customerId, pin);
+    }
+
+    // Updates the PIN for the currently logged-in customer.
+    public void updatePin(int customerId, String newPin) throws SQLException {
+        customerDAO.updatePin(customerId, newPin);
+    }
 }
