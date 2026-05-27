@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.igirepay.lab3_mini_capstone.controller.HistoryController"
+           prefWidth="1000" prefHeight="660"
+           style="-fx-background-color: #0D0D1A;">
+
+    <VBox alignment="CENTER" maxWidth="380" maxHeight="640"
+          style="-fx-background-color: #1A1A1A; -fx-background-radius: 40;
+                 -fx-padding: 12;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0, 0, 10);">
+
+        <VBox style="-fx-background-color: #F0F2F5; -fx-background-radius: 32;"
+              prefWidth="356" prefHeight="600">
+
+            <!-- TOP BAR -->
+            <HBox style="-fx-background-color: #FFCC00; -fx-background-radius: 32 32 0 0;
+                         -fx-padding: 14 20 14 20;"
+                  alignment="CENTER_LEFT" spacing="12">
+                <Button text="←" onAction="#goBack"
+                        style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 16;
+                               -fx-padding: 5 10 5 10; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Statements"
+                       style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: #1A1A2E;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- FILTER BAR -->
+            <VBox style="-fx-background-color: #FFFFFF; -fx-padding: 12 16 12 16;" spacing="8">
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Account ID" style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
+                        <TextField fx:id="filterAccountId" promptText="Enter account ID"
+                                   style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 7 10 7 10;
+                                          -fx-font-size: 13px;"/>
+                    </VBox>
+                    <VBox spacing="4" alignment="BOTTOM_LEFT">
+                        <Label text=" " style="-fx-font-size: 11px;"/>
+                        <Button text="Search" onAction="#loadHistory"
+                                style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                       -fx-font-weight: bold; -fx-background-radius: 8;
+                                       -fx-padding: 8 16 8 16; -fx-cursor: hand;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Summary row -->
+                <HBox spacing="8">
+                    <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
+                           style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
+                </HBox>
+            </VBox>
+
+            <!-- TRANSACTION LIST -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-background: transparent;
+                               -fx-border-color: transparent;">
+                <VBox fx:id="transactionListBox" spacing="0"
+                      style="-fx-padding: 12 16 12 16;">
+                    <Label text="No transactions to display."
+                           style="-fx-text-fill: #AAAAAA; -fx-font-size: 13px; -fx-padding: 20 0 0 0;"/>
+                </VBox>
+            </ScrollPane>
+
+            <!-- BOTTOM NAV -->
+            <HBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 32 32;
+                         -fx-padding: 10 8 14 8;" alignment="CENTER" spacing="0">
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHome"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🏠" style="-fx-font-size: 18px;"/>
+                    <Label text="Home" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goTransactions"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="💸" style="-fx-font-size: 18px;"/>
+                    <Label text="Send" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goTransactions"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <StackPane>
+                        <Circle radius="26" style="-fx-fill: #FFCC00;"/>
+                        <Label text="💳" style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <Label text="MomoPay" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goAccounts"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🏦" style="-fx-font-size: 18px;"/>
+                    <Label text="Buy" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="⋯" style="-fx-font-size: 20px; -fx-text-fill: #FFCC00;"/>
+                    <Label text="More" style="-fx-font-size: 9px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </VBox>
+</StackPane>
