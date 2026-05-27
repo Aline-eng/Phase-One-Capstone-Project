@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.igirepay.lab3_mini_capstone.controller.LoginController"
+           styleClass="login-root"
+           prefWidth="1000" prefHeight="660">
+
+    <VBox styleClass="login-card" spacing="18" maxWidth="420" maxHeight="600"
+          alignment="CENTER">
+
+        <!-- Header -->
+        <VBox alignment="CENTER" spacing="6">
+            <Label text="IgirePay" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #FFCC00;"/>
+            <Label text="Create Your Account" styleClass="login-title"/>
+            <Label text="Fill in your details and create a 5-digit PIN" styleClass="login-subtitle"/>
+        </VBox>
+
+        <!-- Registration form -->
+        <VBox spacing="12">
+            <VBox spacing="5">
+                <Label text="Full Name" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <TextField fx:id="fullNameField" promptText="e.g. Alice Uwase"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="Email" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <TextField fx:id="emailField" promptText="e.g. alice@email.com"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="Phone Number" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <TextField fx:id="phoneField" promptText="e.g. 0781000001"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="Create PIN (exactly 5 digits)" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <PasswordField fx:id="newPinField" promptText="5-digit PIN"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="Confirm PIN" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                <PasswordField fx:id="confirmPinField" promptText="Repeat your PIN"/>
+            </VBox>
+        </VBox>
+
+        <Label fx:id="messageLabel" text="" wrapText="true" maxWidth="360" alignment="CENTER"/>
+
+        <Button text="CREATE ACCOUNT" styleClass="btn-primary" onAction="#handleRegister"
+                maxWidth="Infinity" style="-fx-font-size: 14px; -fx-padding: 12 0 12 0;"/>
+
+        <Hyperlink text="← Back to Login" onAction="#handleGoToLogin"
+                   style="-fx-text-fill: #888888;"/>
+
+        <padding><Insets top="10" bottom="10"/></padding>
+    </VBox>
+</StackPane>
