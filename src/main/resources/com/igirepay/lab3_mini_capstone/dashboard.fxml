@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.igirepay.lab3_mini_capstone.controller.DashboardController"
+            prefWidth="1000" prefHeight="660">
+
+    <!-- ===== LEFT SIDEBAR ===== -->
+    <left>
+        <VBox styleClass="sidebar" spacing="4">
+
+            <!-- Logo header -->
+            <VBox styleClass="sidebar-header" alignment="CENTER">
+                <Label text="IgirePay" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #1A1A2E;"/>
+                <Label text="Mobile Money" style="-fx-font-size: 11px; -fx-text-fill: #1A1A2E;"/>
+            </VBox>
+
+            <!-- Logged in user -->
+            <VBox style="-fx-padding: 16 16 8 16;">
+                <Label text="Logged in as" styleClass="label-muted"/>
+                <Label fx:id="sidebarNameLabel" text="..." style="-fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <Separator style="-fx-background-color: #2D2D4E;"/>
+
+            <!-- Navigation buttons -->
+            <Button text="🏠  Dashboard"   styleClass="sidebar-btn, sidebar-btn-active" onAction="#showDashboard"/>
+            <Button text="👤  Customers"   styleClass="sidebar-btn" onAction="#showCustomers"/>
+            <Button text="💳  Accounts"    styleClass="sidebar-btn" onAction="#showAccounts"/>
+            <Button text="💸  Transactions" styleClass="sidebar-btn" onAction="#showTransactions"/>
+            <Button text="📋  History"     styleClass="sidebar-btn" onAction="#showHistory"/>
+
+            <!-- Push logout to bottom -->
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator style="-fx-background-color: #2D2D4E;"/>
+            <Button text="🔒  Logout" styleClass="sidebar-btn" onAction="#handleLogout"
+                    style="-fx-text-fill: #FF6B6B;"/>
+
+            <padding><Insets bottom="16"/></padding>
+        </VBox>
+    </left>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <center>
+        <VBox spacing="24" style="-fx-padding: 32;">
+
+            <!-- Top greeting bar -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="4">
+                    <Label fx:id="greetingLabel" text="Good morning!" styleClass="label-title"/>
+                    <Label fx:id="dateLabel" text="" styleClass="label-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- Balance cards row -->
+            <HBox spacing="20">
+
+                <!-- Total balance card -->
+                <VBox styleClass="card-dark" spacing="8" HBox.hgrow="ALWAYS" maxWidth="240">
+                    <Label text="Total Balance" styleClass="label-muted" style="-fx-text-fill: #AAAAAA;"/>
+                    <Label fx:id="totalBalanceLabel" text="0 RWF" styleClass="label-balance-white"/>
+                    <Label text="All accounts combined" style="-fx-text-fill: #888888; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <!-- Wallet balance card -->
+                <VBox styleClass="card-yellow" spacing="8" HBox.hgrow="ALWAYS" maxWidth="240">
+                    <Label text="Wallet Account" style="-fx-text-fill: #1A1A2E; -fx-font-size: 12px;"/>
+                    <Label fx:id="walletBalanceLabel" text="0 RWF" styleClass="label-balance"/>
+                    <Label fx:id="walletIdLabel" text="ID: —" style="-fx-text-fill: #555555; -fx-font-size: 11px;"/>
+                </VBox>
+
+                <!-- Savings balance card -->
+                <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS" maxWidth="240">
+                    <Label text="Savings Account" style="-fx-text-fill: #888888; -fx-font-size: 12px;"/>
+                    <Label fx:id="savingsBalanceLabel" text="0 RWF" styleClass="label-balance"/>
+                    <Label fx:id="savingsIdLabel" text="ID: —" style="-fx-text-fill: #888888; -fx-font-size: 11px;"/>
+                </VBox>
+
+            </HBox>
+
+            <!-- Quick actions -->
+            <VBox spacing="12">
+                <Label text="Quick Actions" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                <HBox spacing="16">
+                    <Button text="⬇  Deposit"   styleClass="btn-success" onAction="#showTransactions" prefWidth="150" prefHeight="50"/>
+                    <Button text="⬆  Withdraw"  styleClass="btn-secondary" onAction="#showTransactions" prefWidth="150" prefHeight="50"/>
+                    <Button text="↔  Transfer"  styleClass="btn-primary" onAction="#showTransactions" prefWidth="150" prefHeight="50"/>
+                    <Button text="📋  History"   styleClass="btn-secondary" onAction="#showHistory" prefWidth="150" prefHeight="50"/>
+                </HBox>
+            </VBox>
+
+            <!-- Recent transactions preview -->
+            <VBox styleClass="card" spacing="12">
+                <Label text="Recent Transactions" style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                <TableView fx:id="recentTable" prefHeight="180" style="-fx-background-color: transparent;">
+                    <columns>
+                        <TableColumn fx:id="colRef"    text="Reference"  prefWidth="180"/>
+                        <TableColumn fx:id="colType"   text="Type"       prefWidth="120"/>
+                        <TableColumn fx:id="colAmount" text="Amount"     prefWidth="120"/>
+                        <TableColumn fx:id="colDate"   text="Date"       prefWidth="200"/>
+                    </columns>
+                    <placeholder><Label text="No recent transactions" styleClass="label-muted"/></placeholder>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
