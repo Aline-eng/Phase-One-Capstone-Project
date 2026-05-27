@@ -123,6 +123,36 @@ public class CustomerDAO implements GenericDAO<Customer> {
     // Private helper - converts one ResultSet row into a Customer object.
     // Both findById and findAll use this method so the mapping logic
     // is written once. If the Customer constructor changes, we update here only.
+    // Finds a customer by ID and PIN - used for login authentication.
+    // Returns the customer if both match, null if either is wrong.
+    // We never tell the user which one is wrong - that would help attackers.
+    public Customer findByIdAndPin(int id, String pin) throws SQLException {
+        String sql = "SELECT * FROM customers WHERE id = ? AND pin = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.setString(2, pin);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return mapRow(rs);
+            return null;
+        }
+    }
+
+    // Updates the PIN for a customer - used for PIN change feature.
+    public void updatePin(int customerId, String newPin) throws SQLException {
+        String sql = "UPDATE customers SET pin = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, newPin);
+            stmt.setInt(2, customerId);
+            stmt.executeUpdate();
+        }
+    }
+
     private Customer mapRow(ResultSet rs) throws SQLException {
         return new Customer(
                 rs.getInt("id"),

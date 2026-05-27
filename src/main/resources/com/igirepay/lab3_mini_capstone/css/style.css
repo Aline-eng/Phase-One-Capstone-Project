@@ -1,0 +1,205 @@
+/* ===================================================
+   IgirePay - MTN MoMo Inspired Stylesheet
+   Primary: #FFCC00 (yellow), Dark: #1A1A2E, White: #FFFFFF
+   =================================================== */
+
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-background-color: #F0F2F5;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+    -fx-background-color: #FFCC00;
+    -fx-text-fill: #1A1A2E;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,204,0,0.4), 6, 0, 0, 2);
+}
+.btn-primary:hover { -fx-background-color: #E6B800; }
+
+.btn-secondary {
+    -fx-background-color: #1A1A2E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover { -fx-background-color: #2D2D4E; }
+
+.btn-danger {
+    -fx-background-color: #E53935;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+.btn-danger:hover { -fx-background-color: #C62828; }
+
+.btn-success {
+    -fx-background-color: #43A047;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24 10 24;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+/* ===== CARDS ===== */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 3);
+}
+
+.card-yellow {
+    -fx-background-color: #FFCC00;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(255,204,0,0.3), 12, 0, 0, 3);
+}
+
+.card-dark {
+    -fx-background-color: #1A1A2E;
+    -fx-background-radius: 12;
+    -fx-padding: 24;
+}
+
+/* ===== INPUT FIELDS ===== */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14 10 14;
+    -fx-font-size: 13px;
+    -fx-pref-height: 40;
+}
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #FFCC00;
+    -fx-effect: dropshadow(gaussian, rgba(255,204,0,0.3), 4, 0, 0, 0);
+}
+
+/* ===== LABELS ===== */
+.label-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.label-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #888888;
+}
+.label-balance {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.label-balance-white {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+}
+.label-success {
+    -fx-text-fill: #43A047;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+.label-error {
+    -fx-text-fill: #E53935;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+.label-white {
+    -fx-text-fill: #FFFFFF;
+}
+.label-muted {
+    -fx-text-fill: #AAAAAA;
+    -fx-font-size: 12px;
+}
+
+/* ===== LOGIN SCREEN ===== */
+.login-root {
+    -fx-background-color: #1A1A2E;
+}
+.login-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 16;
+    -fx-padding: 48 40 48 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 30, 0, 0, 8);
+}
+.login-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+.login-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #888888;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    -fx-background-color: #1A1A2E;
+    -fx-padding: 0;
+    -fx-min-width: 220;
+    -fx-pref-width: 220;
+}
+.sidebar-header {
+    -fx-background-color: #FFCC00;
+    -fx-padding: 20 16 20 16;
+}
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #CCCCCC;
+    -fx-font-size: 13px;
+    -fx-padding: 14 20 14 20;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 0;
+    -fx-pref-width: 220;
+    -fx-graphic-text-gap: 10;
+}
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255,204,0,0.15);
+    -fx-text-fill: #FFCC00;
+}
+.sidebar-btn-active {
+    -fx-background-color: rgba(255,204,0,0.2);
+    -fx-text-fill: #FFCC00;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFCC00;
+    -fx-border-width: 0 0 0 3;
+}
+
+/* ===== TABLE VIEW ===== */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+}
+.table-view .column-header-background {
+    -fx-background-color: #1A1A2E;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #FFCC00;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+.table-row-cell { -fx-background-color: #FFFFFF; -fx-border-color: #F5F5F5; }
+.table-row-cell:odd { -fx-background-color: #FAFAFA; }
+.table-row-cell:selected { -fx-background-color: #FFF8E1; }
+.table-row-cell:selected .text { -fx-fill: #1A1A2E; }
+
+/* ===== SEPARATOR ===== */
+.separator .line { -fx-border-color: #EEEEEE; }
+
+/* ===== SCROLL PANE ===== */
+.scroll-pane { -fx-background-color: transparent; }
+.scroll-pane > .viewport { -fx-background-color: transparent; }
