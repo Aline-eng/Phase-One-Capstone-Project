@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.igirepay.lab3_mini_capstone.controller.TransactionController"
+           prefWidth="1000" prefHeight="660"
+           style="-fx-background-color: #0D0D1A;">
+
+    <VBox alignment="CENTER" maxWidth="380" maxHeight="640"
+          style="-fx-background-color: #1A1A1A; -fx-background-radius: 40;
+                 -fx-padding: 12;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.8), 40, 0, 0, 10);">
+
+        <VBox style="-fx-background-color: #F0F2F5; -fx-background-radius: 32;"
+              prefWidth="356" prefHeight="600">
+
+            <!-- TOP BAR -->
+            <HBox style="-fx-background-color: #FFCC00; -fx-background-radius: 32 32 0 0;
+                         -fx-padding: 14 20 14 20;"
+                  alignment="CENTER_LEFT" spacing="12">
+                <Button text="←" onAction="#goBack"
+                        style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 16;
+                               -fx-padding: 5 10 5 10; -fx-cursor: hand; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Transactions"
+                       style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: #1A1A2E;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- TAB SWITCHER -->
+            <HBox style="-fx-background-color: #FFFFFF; -fx-padding: 8 16 0 16;" spacing="0">
+                <Button fx:id="tabDeposit" text="Deposit" onAction="#switchToDeposit"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent transparent #FFCC00 transparent;
+                               -fx-border-width: 0 0 3 0; -fx-font-weight: bold; -fx-font-size: 13px;
+                               -fx-text-fill: #FFCC00; -fx-padding: 10 16 10 16; -fx-cursor: hand;"
+                        HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button fx:id="tabWithdraw" text="Withdraw" onAction="#switchToWithdraw"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;
+                               -fx-font-size: 13px; -fx-text-fill: #888888;
+                               -fx-padding: 10 16 10 16; -fx-cursor: hand;"
+                        HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button fx:id="tabTransfer" text="Transfer" onAction="#switchToTransfer"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;
+                               -fx-font-size: 13px; -fx-text-fill: #888888;
+                               -fx-padding: 10 16 10 16; -fx-cursor: hand;"
+                        HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            </HBox>
+
+            <!-- FORM AREA - changes based on selected tab -->
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-background: transparent;
+                               -fx-border-color: transparent;">
+                <VBox fx:id="formArea" spacing="16" style="-fx-padding: 20 20 20 20;">
+
+                    <!-- Account ID field - shared across all tabs -->
+                    <VBox spacing="6">
+                        <Label text="Account ID" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TextField fx:id="accountIdField" promptText="Enter account ID"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;"/>
+                    </VBox>
+
+                    <!-- Amount field -->
+                    <VBox spacing="6">
+                        <Label text="Amount (RWF)" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TextField fx:id="amountField" promptText="e.g. 5000"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;"/>
+                    </VBox>
+
+                    <!-- Reference ID field -->
+                    <VBox spacing="6">
+                        <Label text="Reference ID" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TextField fx:id="referenceField" promptText="e.g. PAY-001"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;"/>
+                        <Label text="Must be unique per transaction. Uppercase recommended."
+                               style="-fx-font-size: 10px; -fx-text-fill: #AAAAAA;"/>
+                    </VBox>
+
+                    <!-- Receiver field - only visible for Transfer -->
+                    <VBox fx:id="receiverBox" spacing="6" managed="false" visible="false">
+                        <Label text="Receiver Account ID" style="-fx-font-weight: bold; -fx-font-size: 13px;"/>
+                        <TextField fx:id="receiverField" promptText="Receiver's account ID"
+                                   style="-fx-background-radius: 10; -fx-border-radius: 10;
+                                          -fx-border-color: #E0E0E0; -fx-padding: 10 14 10 14;"/>
+                    </VBox>
+
+                    <!-- Fee info label -->
+                    <Label fx:id="feeInfoLabel" text=""
+                           style="-fx-background-color: #FFF8E1; -fx-background-radius: 8;
+                                  -fx-padding: 10; -fx-font-size: 12px; -fx-text-fill: #555555;"
+                           wrapText="true" maxWidth="Infinity"/>
+
+                    <!-- Message label -->
+                    <Label fx:id="messageLabel" text="" wrapText="true"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold;" maxWidth="Infinity"/>
+
+                    <!-- Submit button -->
+                    <Button fx:id="submitButton" text="DEPOSIT" onAction="#handleSubmit"
+                            maxWidth="Infinity"
+                            style="-fx-background-color: #FFCC00; -fx-text-fill: #1A1A2E;
+                                   -fx-font-weight: bold; -fx-font-size: 15px;
+                                   -fx-background-radius: 10; -fx-padding: 13 0 13 0;
+                                   -fx-cursor: hand;"/>
+                </VBox>
+            </ScrollPane>
+
+            <!-- BOTTOM NAV -->
+            <HBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 32 32;
+                         -fx-padding: 10 8 14 8;" alignment="CENTER" spacing="0">
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHome"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🏠" style="-fx-font-size: 18px;"/>
+                    <Label text="Home" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="💸" style="-fx-font-size: 18px;"/>
+                    <Label text="Send" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <StackPane>
+                        <Circle radius="26" style="-fx-fill: #FFCC00;"/>
+                        <Label text="💳" style="-fx-font-size: 20px;"/>
+                    </StackPane>
+                    <Label text="MomoPay" style="-fx-font-size: 9px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goAccounts"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="🏦" style="-fx-font-size: 18px;"/>
+                    <Label text="Buy" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHistory"
+                      style="-fx-cursor: hand; -fx-padding: 4;">
+                    <Label text="⋯" style="-fx-font-size: 20px; -fx-text-fill: #888888;"/>
+                    <Label text="More" style="-fx-font-size: 9px; -fx-text-fill: #888888;"/>
+                </VBox>
+            </HBox>
+
+        </VBox>
+    </VBox>
+</StackPane>
