@@ -6,7 +6,7 @@ public class SessionManager {
 
     private static SessionManager instance;
     private Customer currentCustomer;
-    private String currentRole = "USER"; // default role
+    private String currentRole = "USER";
 
     private SessionManager() {}
 

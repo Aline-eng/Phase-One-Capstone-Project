@@ -18,7 +18,7 @@ public class Transaction {
         this.timestamp = LocalDateTime.now();
     }
 
-    // Used when loading from the database so the stored timestamp is preserved
+    
     public Transaction(int transactionId, String referenceId, double amount,
                        TransactionType transactionType, LocalDateTime timestamp) {
         this.transactionId = transactionId;

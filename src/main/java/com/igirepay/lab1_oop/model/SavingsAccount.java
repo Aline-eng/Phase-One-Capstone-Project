@@ -4,7 +4,6 @@ import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
 import com.igirepay.lab1_oop.exception.InvalidAmountException;
 import com.igirepay.lab1_oop.util.TransactionFee;
 
-// SavingsAccount has withdrawal restrictions: a fee and a minimum balance requirement
 public class SavingsAccount extends Account {
 
     private static final double WITHDRAWAL_FEE = 100;

@@ -18,7 +18,7 @@ public class MainApp extends Application {
         try {
             SceneManager.switchTo("login");
         } catch (Exception e) {
-            // Show a proper error dialog instead of crashing with a blank window
+            
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Startup Error");
             alert.setHeaderText("IgirePay could not start");

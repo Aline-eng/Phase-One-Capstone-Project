@@ -7,11 +7,7 @@ import com.igirepay.lab2_jdbc.service.JdbcWalletService;
 import java.util.List;
 import java.util.Scanner;
 
-// Lab2Runner is the entry point for Lab 2.
-// It handles all user input and output - nothing else.
-// All business logic lives in JdbcWalletService.
-// All database logic lives in the DAOs.
-// This separation is called layered architecture.
+
 public class Lab2Runner {
 
     public static void run() {
@@ -26,13 +22,10 @@ public class Lab2Runner {
             printMenu();
             String choice = scanner.nextLine().trim();
 
-            // One try-catch wraps the whole switch so every operation's
-            // exceptions are caught in one place - avoids repeating
-            // try-catch inside every single case.
+            
             try {
                 switch (choice) {
 
-                    // ---- CUSTOMER MANAGEMENT ----
 
                     case "1" -> {
                         System.out.print("Full name: ");
@@ -41,7 +34,6 @@ public class Lab2Runner {
                         String email = scanner.nextLine();
                         System.out.print("Phone number: ");
                         String phone = scanner.nextLine();
-                        // Customer ID is 0 here because the database will assign the real ID
                         int id = service.registerCustomer(new Customer(0, name, email, phone));
                         System.out.println("Customer registered successfully. ID: " + id);
                     }
@@ -49,7 +41,6 @@ public class Lab2Runner {
                     case "2" -> {
                         System.out.print("Customer ID to update: ");
                         int id = Integer.parseInt(scanner.nextLine());
-                        // First check the customer exists before asking for new details
                         Customer existing = service.findCustomer(id);
                         if (existing == null) {
                             System.out.println("Customer not found.");
@@ -88,14 +79,12 @@ public class Lab2Runner {
                         System.out.println("Customer deleted successfully.");
                     }
 
-                    // ---- ACCOUNT MANAGEMENT ----
 
                     case "6" -> {
                         System.out.print("Customer ID: ");
                         int cid = Integer.parseInt(scanner.nextLine());
                         System.out.print("Initial balance (RWF): ");
                         double bal = Double.parseDouble(scanner.nextLine());
-                        // Account ID is 0 - the database assigns the real ID
                         int aid = service.createAccount(cid, new WalletAccount(0, bal));
                         System.out.println("Wallet account created. Account ID: " + aid);
                     }
@@ -142,7 +131,6 @@ public class Lab2Runner {
                         System.out.println("Account deleted successfully.");
                     }
 
-                    // ---- TRANSACTION MANAGEMENT ----
 
                     case "11" -> {
                         System.out.print("Account ID: ");
@@ -214,11 +202,10 @@ public class Lab2Runner {
                 }
 
             } catch (NumberFormatException e) {
-                // Thrown when the user types letters where a number is expected
+                
                 System.out.println("Invalid input. Please enter a valid number.");
             } catch (Exception e) {
-                // Catches SQLException, DuplicateTransactionException,
-                // InsufficientBalanceException, InvalidAmountException
+                
                 System.out.println("Error: " + e.getMessage());
             }
         }
@@ -226,8 +213,6 @@ public class Lab2Runner {
         scanner.close();
     }
 
-    // Extracted into its own method to keep the run() method clean.
-    // Printing the menu is a separate concern from handling the choice.
     private static void printMenu() {
         System.out.println("\n--- MENU ---");
         System.out.println("-- Customer Management --");

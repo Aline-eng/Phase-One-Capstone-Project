@@ -9,16 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// AccountDAO handles all database operations for the accounts table.
-// Notice it implements GenericDAO<Account> but also adds extra methods
-// that are specific to accounts (updateBalance, findByCustomerId).
-// The GenericDAO interface only covers the 4 standard CRUD operations.
+
 public class AccountDAO implements GenericDAO<Account> {
 
-    // CREATE - inserts a new account linked to a customer.
-    // We need customerId as a separate parameter because Account itself
-    // does not store which customer it belongs to - that relationship
-    // lives in the database as a foreign key.
+
     public int save(int customerId, Account account) throws SQLException {
         String sql = "INSERT INTO accounts (customer_id, account_type, balance) VALUES (?, ?, ?)";
 
@@ -26,8 +20,7 @@ public class AccountDAO implements GenericDAO<Account> {
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, customerId);
-            // getAccountType() returns "Wallet" or "Savings" - we store this string
-            // in the database so we know which subclass to recreate when reading back
+
             stmt.setString(2, account.getAccountType());
             stmt.setDouble(3, account.getBalance());
             stmt.executeUpdate();
@@ -40,18 +33,13 @@ public class AccountDAO implements GenericDAO<Account> {
         }
     }
 
-    // This satisfies the GenericDAO interface contract.
-    // It delegates to the two-parameter version with customerId = 0
-    // because the interface does not know about customerId.
-    // In practice, always use save(customerId, account) directly.
+
     @Override
     public int save(Account account) throws SQLException {
         return save(0, account);
     }
 
-    // READ - finds one account by its id.
-    // Returns the correct subclass (WalletAccount or SavingsAccount)
-    // so that the fee logic in those classes is preserved.
+
     @Override
     public Account findById(int id) throws SQLException {
         String sql = "SELECT * FROM accounts WHERE id = ?";
@@ -68,8 +56,7 @@ public class AccountDAO implements GenericDAO<Account> {
         }
     }
 
-    // READ - returns all accounts that belong to one customer.
-    // Used when displaying a customer's portfolio of accounts.
+
     public List<Account> findByCustomerId(int customerId) throws SQLException {
         String sql = "SELECT * FROM accounts WHERE customer_id = ? ORDER BY id";
         List<Account> list = new ArrayList<>();
@@ -86,8 +73,7 @@ public class AccountDAO implements GenericDAO<Account> {
         return list;
     }
 
-    // UPDATE - saves the new balance after a deposit, withdrawal, or transfer.
-    // We only update balance here - account_type and customer_id never change.
+
     public void updateBalance(int accountId, double newBalance) throws SQLException {
         String sql = "UPDATE accounts SET balance = ? WHERE id = ?";
 
@@ -100,8 +86,7 @@ public class AccountDAO implements GenericDAO<Account> {
         }
     }
 
-    // UPDATE - satisfies the GenericDAO interface.
-    // Updates all fields of an account row.
+
     @Override
     public void update(Account account) throws SQLException {
         String sql = "UPDATE accounts SET balance = ?, account_type = ? WHERE id = ?";
@@ -116,10 +101,7 @@ public class AccountDAO implements GenericDAO<Account> {
         }
     }
 
-    // DELETE - removes an account row by id.
-    // Used for deleting inactive accounts (Exercise 2.2 requirement).
-    // The database will reject this if the account still has transactions
-    // linked to it via the FOREIGN KEY on the transactions table.
+
     @Override
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM accounts WHERE id = ?";

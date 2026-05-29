@@ -4,8 +4,7 @@ import com.igirepay.lab1_oop.exception.InsufficientBalanceException;
 import com.igirepay.lab1_oop.exception.InvalidAmountException;
 import com.igirepay.lab1_oop.util.TransactionFee;
 
-// WalletAccount extends Account - inherits deposit(), balance, accountId
-// Allows instant transfers with no fees or minimum balance restrictions
+
 public class WalletAccount extends Account {
 
     public WalletAccount(int accountId, double balance) {
@@ -26,7 +25,7 @@ public class WalletAccount extends Account {
 
     @Override
     public void processTransaction(double amount) throws InvalidAmountException, InsufficientBalanceException {
-        // Wallet allows instant deposits (positive) or withdrawals (negative)
+        
         if (amount > 0) {
             deposit(amount);
         } else {

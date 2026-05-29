@@ -9,8 +9,7 @@ import java.util.List;
 
 public class CustomerDAO implements GenericDAO<Customer> {
 
-    // Inserts customer and PIN in one transaction so a failed insert
-    // does not advance the ID sequence
+
     public int save(Customer customer, String pin) throws SQLException {
         String sql = "INSERT INTO customers (full_name, email, phone_number, pin, role) VALUES (?, ?, ?, ?, ?)";
 

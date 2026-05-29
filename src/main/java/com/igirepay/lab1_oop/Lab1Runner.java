@@ -9,11 +9,11 @@ import java.util.Scanner;
 public class Lab1Runner {
 
     public static void run() {
-        // Scanner reads input from the keyboard (System.in)
+        
         Scanner scanner = new Scanner(System.in);
         WalletService service = new WalletService();
 
-        // Pre-load two customers with accounts so we have data to work with
+        
         Customer alice = new Customer(1, "Alice Uwase", "alice@email.com", "0781000001");
         Customer bob = new Customer(2, "Bob Mugisha", "bob@email.com", "0782000002");
 
@@ -46,7 +46,7 @@ public class Lab1Runner {
             System.out.println("6. Exit");
             System.out.print("Choose an option: ");
 
-            // nextLine() reads the full line the user types including spaces
+            
             String choice = scanner.nextLine();
 
             switch (choice) {
