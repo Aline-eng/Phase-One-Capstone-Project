@@ -56,6 +56,14 @@ public class CustomerController {
             showUpdateMsg("All fields are required.", false);
             return;
         }
+        if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            showUpdateMsg("Invalid email. Must contain '@' and a valid domain (e.g. name@example.com).", false);
+            return;
+        }
+        if (!phone.matches("^07\\d{8}$")) {
+            showUpdateMsg("Invalid phone number. Must be 10 digits starting with 07 (e.g. 0781234567).", false);
+            return;
+        }
 
         try {
             // Always use the session customer's ID - the field is read-only but we

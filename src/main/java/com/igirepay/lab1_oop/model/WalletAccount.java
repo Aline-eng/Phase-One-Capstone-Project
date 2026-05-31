@@ -12,6 +12,12 @@ public class WalletAccount extends Account {
     }
 
     @Override
+    public void deposit(double amount) {
+        if (amount <= 0) return;
+        setBalance(getBalance() + amount);
+    }
+
+    @Override
     public void withdraw(double amount) throws InvalidAmountException, InsufficientBalanceException {
         if (amount <= 0) throw new InvalidAmountException("Amount must be greater than 0!!");
         double fee = TransactionFee.getWalletFee(amount);

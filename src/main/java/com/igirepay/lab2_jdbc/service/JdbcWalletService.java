@@ -6,10 +6,13 @@ import com.igirepay.lab1_oop.exception.InvalidAmountException;
 import com.igirepay.lab1_oop.model.*;
 import com.igirepay.lab2_jdbc.dao.AccountDAO;
 import com.igirepay.lab2_jdbc.dao.CustomerDAO;
+import com.igirepay.lab2_jdbc.dao.LoanDAO;
 import com.igirepay.lab2_jdbc.dao.TransactionDAO;
+import com.igirepay.lab2_jdbc.model.Loan;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class JdbcWalletService {
 
@@ -17,6 +20,7 @@ public class JdbcWalletService {
     private final AccountDAO accountDAO = new AccountDAO();
     private final TransactionDAO transactionDAO = new TransactionDAO();
     private final IdempotencyService idempotencyService = new IdempotencyService();
+    private final LoanDAO loanDAO = new LoanDAO();
 
     private int transactionCounter = 1;
 
@@ -114,6 +118,10 @@ public class JdbcWalletService {
         return outTx;
     }
 
+    public Map<String, double[]> getDailySummary(int accountId) throws SQLException {
+        return transactionDAO.getDailySummary(accountId);
+    }
+
     public List<String> getAllProcessedRequests() throws SQLException {
         return idempotencyService.getAllProcessedRequests();
     }
@@ -190,5 +198,25 @@ public class JdbcWalletService {
 
     public void updatePin(int customerId, String newPin) throws SQLException {
         customerDAO.updatePin(customerId, newPin);
+    }
+
+    // Submits a loan request for a customer
+    public int requestLoan(int customerId, double amount, String reason) throws SQLException {
+        return loanDAO.save(customerId, amount, reason);
+    }
+
+    // Returns all loan requests for one customer
+    public List<Loan> getLoansByCustomer(int customerId) throws SQLException {
+        return loanDAO.findByCustomerId(customerId);
+    }
+
+    // Admin - returns all loan requests in the system
+    public List<Loan> getAllLoans() throws SQLException {
+        return loanDAO.findAll();
+    }
+
+    // Admin - approves or rejects a loan
+    public void updateLoanStatus(int loanId, String status) throws SQLException {
+        loanDAO.updateStatus(loanId, status);
     }
 }

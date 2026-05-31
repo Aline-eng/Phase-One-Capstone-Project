@@ -58,6 +58,15 @@
                 </HBox>
                 <Label fx:id="summaryLabel" text="Enter an account ID to view transactions"
                        style="-fx-font-size: 11px; -fx-text-fill: #888888;"/>
+                <!-- Daily summary card -->
+                <VBox fx:id="dailySummaryBox"
+                      style="-fx-background-color: #1A1A2E; -fx-background-radius: 8; -fx-padding: 10;"
+                      managed="false" visible="false" spacing="3">
+                    <Label text="Today's Summary" style="-fx-text-fill: #AAAAAA; -fx-font-size: 11px;"/>
+                    <Label fx:id="dailySummaryLabel" text=""
+                           style="-fx-text-fill: #FFCC00; -fx-font-size: 12px; -fx-font-weight: bold;"
+                           wrapText="true"/>
+                </VBox>
             </VBox>
 
             <!-- TRANSACTION LIST -->
