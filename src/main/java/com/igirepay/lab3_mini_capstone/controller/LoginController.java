@@ -83,6 +83,14 @@ public class LoginController {
             showError("All fields are required.");
             return;
         }
+        if (!isValidEmail(email)) {
+            showError("Invalid email. Must contain '@' and a valid domain (e.g. name@example.com).");
+            return;
+        }
+        if (!isValidPhone(phone)) {
+            showError("Invalid phone number. Must be 10 digits starting with 07 (e.g. 0781234567).");
+            return;
+        }
         if (!isValidPin(pin)) {
             showError("PIN must be exactly 5 digits (numbers only).");
             return;
@@ -115,10 +123,9 @@ public class LoginController {
         catch (Exception e) { showError("Navigation failed."); }
     }
 
-    // PIN must be exactly 5 digits - \\d{5} means: 5 characters, all 0-9
-    private boolean isValidPin(String pin) {
-        return pin.matches("\\d{5}");
-    }
+    private boolean isValidPin(String pin)   { return pin.matches("\\d{5}"); }
+    private boolean isValidEmail(String email) { return email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"); }
+    private boolean isValidPhone(String phone) { return phone.matches("^07\\d{8}$"); }
 
     private void showError(String message) {
         messageLabel.setText(message);

@@ -2,11 +2,13 @@ package com.igirepay.lab3_mini_capstone.controller;
 
 import com.igirepay.lab1_oop.model.Customer;
 import com.igirepay.lab1_oop.model.Transaction;
+import com.igirepay.lab2_jdbc.model.Loan;
 import com.igirepay.lab2_jdbc.service.JdbcWalletService;
 import com.igirepay.lab3_mini_capstone.util.SceneManager;
 import com.igirepay.lab3_mini_capstone.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -16,6 +18,7 @@ import javafx.scene.layout.VBox;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 public class AdminController {
 
@@ -36,6 +39,13 @@ public class AdminController {
 
     // All customers section
     @FXML private VBox customersListBox;
+
+    // Loans section
+    @FXML private VBox loansListBox;
+
+    // Daily summary section
+    @FXML private TextField summaryAccountIdField;
+    @FXML private VBox dailySummaryListBox;
 
     // Admin name label
     @FXML private Label adminNameLabel;
@@ -258,12 +268,140 @@ public class AdminController {
         return row;
     }
 
+    // ===== DAILY SUMMARY =====
+
+    @FXML
+    private void handleLoadDailySummary() {
+        String idText = summaryAccountIdField.getText().trim();
+        if (idText.isEmpty()) {
+            dailySummaryListBox.getChildren().setAll(noLabel("Please enter an account ID."));
+            return;
+        }
+        try {
+            int accountId = Integer.parseInt(idText);
+            Map<String, double[]> summary = service.getDailySummary(accountId);
+            dailySummaryListBox.getChildren().clear();
+            if (summary.isEmpty()) {
+                dailySummaryListBox.getChildren().add(noLabel("No transactions found for account " + accountId));
+                return;
+            }
+            for (Map.Entry<String, double[]> entry : summary.entrySet()) {
+                double in  = entry.getValue()[0];
+                double out = entry.getValue()[1];
+                HBox row = new HBox(8);
+                row.setAlignment(Pos.CENTER_LEFT);
+                row.setStyle("-fx-background-color: #F8F9FA; -fx-background-radius: 8; -fx-padding: 10 12 10 12;");
+                VBox.setMargin(row, new javafx.geometry.Insets(0, 0, 4, 0));
+
+                Label dateLabel = new Label(entry.getKey());
+                dateLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1A1A2E; -fx-min-width: 90;");
+
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+
+                Label inLabel = new Label(String.format("+%,.0f", in));
+                inLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #43A047;");
+                Label outLabel = new Label(String.format("-%,.0f", out));
+                outLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #E53935;");
+                Label netLabel = new Label(String.format("Net: %,.0f RWF", in - out));
+                netLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #555555;");
+
+                row.getChildren().addAll(dateLabel, spacer, inLabel, new Label(" / "), outLabel, new Label("  "), netLabel);
+                dailySummaryListBox.getChildren().add(row);
+            }
+        } catch (NumberFormatException e) {
+            dailySummaryListBox.getChildren().setAll(noLabel("Account ID must be a number."));
+        } catch (Exception e) {
+            dailySummaryListBox.getChildren().setAll(noLabel("Error: " + e.getMessage()));
+        }
+    }
+
     // ===== LOGOUT =====
 
     @FXML
     private void handleLogout() {
         SessionManager.getInstance().clear();
         navigate("login");
+    }
+
+    // ===== LOAN MANAGEMENT =====
+
+    @FXML
+    private void loadAllLoans() {
+        try {
+            List<Loan> loans = service.getAllLoans();
+            loansListBox.getChildren().clear();
+
+            if (loans.isEmpty()) {
+                loansListBox.getChildren().add(noLabel("No loan requests found."));
+                return;
+            }
+            for (Loan loan : loans) {
+                loansListBox.getChildren().add(buildLoanRow(loan));
+            }
+        } catch (Exception e) {
+            loansListBox.getChildren().clear();
+            loansListBox.getChildren().add(noLabel("Error: " + e.getMessage()));
+        }
+    }
+
+    private HBox buildLoanRow(Loan loan) {
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: #F8F9FA; -fx-background-radius: 8; -fx-padding: 10 12 10 12;");
+        VBox.setMargin(row, new javafx.geometry.Insets(0, 0, 4, 0));
+
+        String icon = switch (loan.getStatus()) {
+            case "APPROVED" -> "✅";
+            case "REJECTED" -> "❌";
+            default         -> "⏳";
+        };
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 16px;");
+
+        VBox info = new VBox(2);
+        Label amtLabel = new Label(String.format("%,.0f RWF  •  Customer ID: %d", loan.getAmount(), loan.getCustomerId()));
+        amtLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #1A1A2E;");
+        Label reasonLabel = new Label(loan.getReason());
+        reasonLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #888888;");
+        info.getChildren().addAll(amtLabel, reasonLabel);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        // Approve / Reject buttons only for PENDING loans
+        VBox actions = new VBox(4);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+        if ("PENDING".equals(loan.getStatus())) {
+            Button approveBtn = new Button("Approve");
+            approveBtn.setStyle("-fx-background-color: #43A047; -fx-text-fill: #FFFFFF; " +
+                    "-fx-font-size: 10px; -fx-background-radius: 6; -fx-padding: 4 8 4 8; -fx-cursor: hand;");
+            approveBtn.setOnAction(e -> updateLoanStatus(loan.getId(), "APPROVED"));
+
+            Button rejectBtn = new Button("Reject");
+            rejectBtn.setStyle("-fx-background-color: #E53935; -fx-text-fill: #FFFFFF; " +
+                    "-fx-font-size: 10px; -fx-background-radius: 6; -fx-padding: 4 8 4 8; -fx-cursor: hand;");
+            rejectBtn.setOnAction(e -> updateLoanStatus(loan.getId(), "REJECTED"));
+
+            actions.getChildren().addAll(approveBtn, rejectBtn);
+        } else {
+            String statusColor = "APPROVED".equals(loan.getStatus()) ? "#43A047" : "#E53935";
+            Label statusLabel = new Label(loan.getStatus());
+            statusLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 11px; -fx-text-fill: " + statusColor + ";");
+            actions.getChildren().add(statusLabel);
+        }
+
+        row.getChildren().addAll(iconLabel, info, spacer, actions);
+        return row;
+    }
+
+    private void updateLoanStatus(int loanId, String status) {
+        try {
+            service.updateLoanStatus(loanId, status);
+            loadAllLoans();
+        } catch (Exception e) {
+            // silently refresh
+        }
     }
 
     // ===== HELPERS =====

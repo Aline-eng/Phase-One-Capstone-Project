@@ -169,6 +169,7 @@ public class DashboardController {
     @FXML private void showNotifications() { navigate("history"); }
     @FXML private void showBuy()           { navigate("buy"); }
     @FXML private void showAdminPanel()    { navigate("admin"); }
+    @FXML private void showLoans()         { navigate("loans"); }
 
     @FXML
     private void handleLogout() {

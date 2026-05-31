@@ -26,6 +26,8 @@ public class HistoryController {
     @FXML private TextField filterAccountId;
     @FXML private Label summaryLabel;
     @FXML private VBox transactionListBox;
+    @FXML private VBox dailySummaryBox;
+    @FXML private Label dailySummaryLabel;
 
     private final JdbcWalletService service = new JdbcWalletService();
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd MMM yyyy  HH:mm");
@@ -119,13 +121,28 @@ public class HistoryController {
 
     private void renderTransactions(List<Transaction> transactions, int accountId, String accountType) {
         double totalIn = 0, totalOut = 0;
+        double todayIn = 0, todayOut = 0;
+        LocalDate today = LocalDate.now();
+
         for (Transaction t : transactions) {
             boolean in = isIncoming(t);
             if (in) totalIn += t.getAmount(); else totalOut += t.getAmount();
+            // Daily summary - only count transactions from today
+            if (t.getTimestamp().toLocalDate().equals(today)) {
+                if (in) todayIn += t.getAmount(); else todayOut += t.getAmount();
+            }
         }
+
         summaryLabel.setText(String.format(
-            "Account %d (%s)  •  %d transactions  •  In: +%,.0f  Out: -%,.0f RWF",
+            "Account %d (%s)  -  %d transactions  -  In: +%,.0f  Out: -%,.0f RWF",
             accountId, accountType, transactions.size(), totalIn, totalOut));
+
+        // Show daily summary card
+        dailySummaryLabel.setText(String.format(
+            "In: +%,.0f RWF  |  Out: -%,.0f RWF  |  Net: %,.0f RWF",
+            todayIn, todayOut, todayIn - todayOut));
+        dailySummaryBox.setVisible(true);
+        dailySummaryBox.setManaged(true);
 
         transactionListBox.getChildren().clear();
         transactions.forEach(t -> transactionListBox.getChildren().add(buildRow(t)));

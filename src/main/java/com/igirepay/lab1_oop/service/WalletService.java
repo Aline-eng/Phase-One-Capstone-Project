@@ -16,6 +16,7 @@ public class WalletService {
     private Map<Integer, Account> accounts = new HashMap<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
     private Set<String> processedReferenceIds = new HashSet<>();
+    private List<String> failedTransactionLogs = new ArrayList<>();
     private int transactionCounter = 1;
 
     public void registerCustomer(Customer customer) {
@@ -38,10 +39,15 @@ public class WalletService {
         return transactionHistory;
     }
 
+    public List<String> getFailedTransactionLogs() {
+        return failedTransactionLogs;
+    }
+
     public Transaction transfer(int senderAccountId, int receiverAccountId, String referenceId, double amount)
             throws Exception {
 
         if (processedReferenceIds.contains(referenceId)) {
+            failedTransactionLogs.add("DUPLICATE: ref=" + referenceId);
             TransactionLogger.logFailure(referenceId, "Duplicate transfer rejected");
             throw new DuplicateTransactionException("Transfer already processed: " + referenceId);
         }
@@ -50,10 +56,12 @@ public class WalletService {
         Account receiver = accounts.get(receiverAccountId);
 
         if (sender == null) {
+            failedTransactionLogs.add("ACCOUNT NOT FOUND: sender=" + senderAccountId);
             TransactionLogger.logFailure(referenceId, "Sender account not found: " + senderAccountId);
             throw new InvalidAmountException("Sender account not found: " + senderAccountId);
         }
         if (receiver == null) {
+            failedTransactionLogs.add("ACCOUNT NOT FOUND: receiver=" + receiverAccountId);
             TransactionLogger.logFailure(referenceId, "Receiver account not found: " + receiverAccountId);
             throw new InvalidAmountException("Receiver account not found: " + receiverAccountId);
         }
@@ -96,12 +104,14 @@ public class WalletService {
             throws Exception {
 
         if (processedReferenceIds.contains(referenceId)) {
+            failedTransactionLogs.add("DUPLICATE: ref=" + referenceId);
             TransactionLogger.logFailure(referenceId, "Duplicate transaction rejected");
             throw new DuplicateTransactionException("Transaction already processed: " + referenceId);
         }
 
         Account account = accounts.get(accountId);
         if (account == null) {
+            failedTransactionLogs.add("ACCOUNT NOT FOUND: id=" + accountId);
             TransactionLogger.logFailure(referenceId, "Account not found: " + accountId);
             throw new InvalidAmountException("Account not found: " + accountId);
         }

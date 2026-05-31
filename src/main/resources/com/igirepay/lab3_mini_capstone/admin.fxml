@@ -114,6 +114,49 @@
                         </VBox>
                     </VBox>
 
+                    <!-- DAILY TRANSACTION SUMMARY -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="10">
+                        <Label text="Daily Transaction Summary"
+                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                        <HBox spacing="10">
+                            <TextField fx:id="summaryAccountIdField" promptText="Account ID"
+                                       HBox.hgrow="ALWAYS"
+                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
+                            <Button text="Load" onAction="#handleLoadDailySummary"
+                                    style="-fx-background-color: #1A1A2E; -fx-text-fill: #FFFFFF;
+                                           -fx-font-weight: bold; -fx-background-radius: 8;
+                                           -fx-padding: 9 16 9 16; -fx-cursor: hand;"/>
+                        </HBox>
+                        <VBox fx:id="dailySummaryListBox" spacing="4">
+                            <Label text="Enter an account ID to view daily summaries."
+                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 12px;"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- LOAN MANAGEMENT -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Loan Requests"
+                                   style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="Refresh" onAction="#loadAllLoans"
+                                    style="-fx-background-color: #F0F2F5; -fx-text-fill: #555555;
+                                           -fx-font-size: 11px; -fx-background-radius: 6;
+                                           -fx-padding: 5 10 5 10; -fx-cursor: hand;"/>
+                        </HBox>
+                        <VBox fx:id="loansListBox" spacing="6">
+                            <Label text="Press Refresh to load loan requests."
+                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 12px;"/>
+                        </VBox>
+                    </VBox>
+
                     <!-- ALL CUSTOMERS LIST -->
                     <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
                                  -fx-padding: 16;
