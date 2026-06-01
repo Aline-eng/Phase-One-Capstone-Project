@@ -26,7 +26,7 @@
                         style="-fx-background-color: rgba(0,0,0,0.15); -fx-background-radius: 16;
                                -fx-padding: 5 10 5 10; -fx-cursor: hand; -fx-font-weight: bold;"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Label text="Accounts"
+                <Label text="Savings &amp; Wallet"
                        style="-fx-font-weight: bold; -fx-font-size: 17px; -fx-text-fill: #1A1A2E;"/>
                 <Region HBox.hgrow="ALWAYS"/>
             </HBox>
@@ -36,20 +36,92 @@
                                -fx-border-color: transparent;">
                 <VBox spacing="14" style="-fx-padding: 16 16 16 16;">
 
-                    <!-- CREATE ACCOUNT CARD -->
+                    <!-- ACCOUNT OVERVIEW CARDS -->
+                    <HBox spacing="10">
+                        <!-- Wallet Card -->
+                        <VBox style="-fx-background-color: #1A1A2E; -fx-background-radius: 16;
+                                     -fx-padding: 16;" spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="💳 Wallet"
+                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 11px;"/>
+                            <Label fx:id="walletBalanceLabel" text="— RWF"
+                                   style="-fx-text-fill: #FFCC00; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                   wrapText="true"/>
+                            <Label fx:id="walletIdLabel" text=""
+                                   style="-fx-text-fill: #666666; -fx-font-size: 10px;"/>
+                        </VBox>
+                        <!-- Savings Card -->
+                        <VBox style="-fx-background-color: #1A1A2E; -fx-background-radius: 16;
+                                     -fx-padding: 16;" spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="🏦 Savings"
+                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 11px;"/>
+                            <Label fx:id="savingsBalanceLabel" text="— RWF"
+                                   style="-fx-text-fill: #43A047; -fx-font-size: 16px; -fx-font-weight: bold;"
+                                   wrapText="true"/>
+                            <Label fx:id="savingsIdLabel" text=""
+                                   style="-fx-text-fill: #666666; -fx-font-size: 10px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="noAccountsLabel" text="You have no accounts yet. Create one below."
+                           style="-fx-text-fill: #AAAAAA; -fx-font-size: 12px;" wrapText="true"
+                           managed="false" visible="false"/>
+
+                    <!-- INTERNAL TRANSFER CARD -->
                     <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
                                  -fx-padding: 16;
                                  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
                           spacing="12">
-                        <Label text="Create New Account"
+                        <Label text="Move Money Between Accounts"
                                style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
+                        <Label text="Transfer between your Wallet and Savings instantly."
+                               style="-fx-font-size: 11px; -fx-text-fill: #888888;" wrapText="true"/>
 
                         <VBox spacing="6">
-                            <Label text="Customer ID" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
-                            <TextField fx:id="customerIdField" promptText="Enter customer ID"
+                            <Label text="From" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="fromDropdown" maxWidth="Infinity"
+                                      style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                             -fx-border-color: #E0E0E0; -fx-font-size: 12px;"/>
+                        </VBox>
+
+                        <VBox spacing="6">
+                            <Label text="To" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <ComboBox fx:id="toDropdown" maxWidth="Infinity"
+                                      style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                             -fx-border-color: #E0E0E0; -fx-font-size: 12px;"/>
+                        </VBox>
+
+                        <VBox spacing="6">
+                            <Label text="Amount (RWF)" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <TextField fx:id="transferAmountField" promptText="e.g. 5000"
                                        style="-fx-background-radius: 8; -fx-border-radius: 8;
                                               -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
                         </VBox>
+
+                        <VBox spacing="6">
+                            <Label text="PIN to Confirm" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                            <PasswordField fx:id="transferPinField" promptText="Your 5-digit PIN"
+                                           style="-fx-background-radius: 8; -fx-border-radius: 8;
+                                                  -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
+                        </VBox>
+
+                        <Label fx:id="transferMessageLabel" text="" wrapText="true"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+
+                        <Button text="MOVE MONEY" onAction="#handleInternalTransfer"
+                                maxWidth="Infinity"
+                                style="-fx-background-color: #1A1A2E; -fx-text-fill: #FFCC00;
+                                       -fx-font-weight: bold; -fx-font-size: 13px;
+                                       -fx-background-radius: 8; -fx-padding: 11 0 11 0;
+                                       -fx-cursor: hand;"/>
+                    </VBox>
+
+                    <!-- CREATE NEW ACCOUNT CARD -->
+                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
+                                 -fx-padding: 16;
+                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
+                          spacing="12">
+                        <Label text="Open a New Account"
+                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
 
                         <VBox spacing="6">
                             <Label text="Account Type" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
@@ -85,52 +157,6 @@
                                        -fx-cursor: hand;"/>
                     </VBox>
 
-                    <!-- VIEW ACCOUNTS CARD -->
-                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
-                                 -fx-padding: 16;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
-                          spacing="12">
-                        <Label text="View Customer Accounts"
-                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
-
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <TextField fx:id="viewCustomerIdField" promptText="Customer ID"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
-                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <Button text="Load" onAction="#handleLoadAccounts"
-                                    style="-fx-background-color: #1A1A2E; -fx-text-fill: #FFFFFF;
-                                           -fx-font-weight: bold; -fx-background-radius: 8;
-                                           -fx-padding: 9 16 9 16; -fx-cursor: hand;"/>
-                        </HBox>
-
-                        <VBox fx:id="accountsListBox" spacing="8">
-                            <Label text="Enter a customer ID and press Load."
-                                   style="-fx-text-fill: #AAAAAA; -fx-font-size: 12px;"/>
-                        </VBox>
-                    </VBox>
-
-                    <!-- DELETE ACCOUNT CARD -->
-                    <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 16;
-                                 -fx-padding: 16;
-                                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);"
-                          spacing="12">
-                        <Label text="Delete Inactive Account"
-                               style="-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #1A1A2E;"/>
-                        <HBox spacing="10">
-                            <TextField fx:id="deleteAccountIdField" promptText="Account ID to delete"
-                                       HBox.hgrow="ALWAYS"
-                                       style="-fx-background-radius: 8; -fx-border-radius: 8;
-                                              -fx-border-color: #E0E0E0; -fx-padding: 8 12 8 12;"/>
-                            <Button text="Delete" onAction="#handleDelete"
-                                    style="-fx-background-color: #E53935; -fx-text-fill: #FFFFFF;
-                                           -fx-font-weight: bold; -fx-background-radius: 8;
-                                           -fx-padding: 9 14 9 14; -fx-cursor: hand;"/>
-                        </HBox>
-                        <Label fx:id="deleteMessageLabel" text="" wrapText="true"
-                               style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
-                    </VBox>
-
                 </VBox>
             </ScrollPane>
 
@@ -158,7 +184,8 @@
                 <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS"
                       style="-fx-cursor: hand; -fx-padding: 4;">
                     <Label text="🏦" style="-fx-font-size: 18px;"/>
-                    <Label text="Buy" style="-fx-font-size: 9px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
+                    <Label text="Savings"
+                           style="-fx-font-size: 9px; -fx-text-fill: #FFCC00; -fx-font-weight: bold;"/>
                 </VBox>
                 <VBox alignment="CENTER" spacing="3" HBox.hgrow="ALWAYS" onMouseClicked="#goHistory"
                       style="-fx-cursor: hand; -fx-padding: 4;">
