@@ -68,24 +68,55 @@ public class JdbcWalletService {
             throws Exception {
 
         referenceId = referenceId.toUpperCase().trim();
-
         idempotencyService.validateReference(referenceId);
 
         Account account = accountDAO.findById(accountId);
-        if (account == null) {
-            throw new InvalidAmountException("Account not found: " + accountId);
-        }
+        if (account == null) throw new InvalidAmountException("Account not found: " + accountId);
 
         account.processTransaction(type == TransactionType.WITHDRAW ? -amount : amount);
-
         accountDAO.updateBalance(accountId, account.getBalance());
 
         Transaction transaction = new Transaction(transactionCounter++, referenceId, amount, type);
         transactionDAO.save(accountId, transaction);
-
         idempotencyService.markAsProcessed(referenceId);
-
         return transaction;
+    }
+
+    // Ownership-enforced version used by the UI — ensures the account belongs to the customer
+    public Transaction processTransaction(int customerId, int accountId, String referenceId, double amount, TransactionType type)
+            throws Exception {
+
+        List<Account> owned = accountDAO.findByCustomerId(customerId);
+        boolean owns = owned.stream().anyMatch(a -> a.getAccountId() == accountId);
+        if (!owns) throw new Exception("Access denied: account " + accountId + " does not belong to your profile.");
+        return processTransaction(accountId, referenceId, amount, type);
+    }
+
+    public Transaction transfer(int senderCustomerId, int senderAccountId, String receiverPhone, String referenceId, double amount)
+            throws Exception {
+
+        // Ownership check — sender must own the source account
+        List<Account> owned = accountDAO.findByCustomerId(senderCustomerId);
+        boolean owns = owned.stream().anyMatch(a -> a.getAccountId() == senderAccountId);
+        if (!owns) throw new Exception("Access denied: account " + senderAccountId + " does not belong to your profile.");
+
+        // Resolve receiver by phone number
+        Customer receiver = customerDAO.findByPhone(receiverPhone);
+        if (receiver == null) throw new Exception("No account found for phone number: " + receiverPhone);
+
+        // Get receiver's primary (first) account
+        List<Account> receiverAccounts = accountDAO.findByCustomerId(receiver.getCustomerId());
+        if (receiverAccounts.isEmpty()) throw new Exception(receiver.getFullName() + " has no accounts to receive money.");
+        int receiverAccountId = receiverAccounts.get(0).getAccountId();
+
+        return transfer(senderAccountId, receiverAccountId, referenceId, amount);
+    }
+
+    // Lookup a customer by phone for transfer confirmation screen
+    public Customer findCustomerByPhone(String phone) throws Exception {
+        Customer c = customerDAO.findByPhone(phone);
+        if (c == null) throw new Exception("No customer found with phone number: " + phone);
+        return c;
     }
 
     public Transaction transfer(int senderAccountId, int receiverAccountId, String referenceId, double amount)
