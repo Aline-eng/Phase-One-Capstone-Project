@@ -96,7 +96,7 @@
                         <GridPane hgap="12" vgap="12">
                             <!-- Row 1 -->
                             <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
-                                  styleClass="action-tile" onMouseClicked="#showSendMoney"
+                                  onMouseClicked="#showSendMoney"
                                   style="-fx-background-color: #FFF8E1; -fx-background-radius: 12;
                                          -fx-padding: 14; -fx-alignment: CENTER; -fx-cursor: hand;
                                          -fx-pref-width: 90; -fx-pref-height: 80;" spacing="6">
