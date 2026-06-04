@@ -114,19 +114,11 @@ public class AccountDAO implements GenericDAO<Account> {
         }
     }
 
-    // Private helper - reads one row from the ResultSet and returns
-    // the correct Account subclass based on the account_type column.
-    // This is polymorphism at the data layer - we recreate the right
-    // object type so WalletAccount and SavingsAccount fee logic still works
-    // after loading from the database.
     private Account mapRow(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         double balance = rs.getDouble("balance");
         String type = rs.getString("account_type");
 
-        // We check the stored string to decide which subclass to instantiate.
-        // "Wallet" → WalletAccount (instant transfers, tiered fees)
-        // anything else → SavingsAccount (date-based fee, minimum balance)
         if (type.equals("Wallet")) {
             return new WalletAccount(id, balance);
         } else {

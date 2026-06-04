@@ -19,7 +19,6 @@ public class BuyController {
 
     @FXML
     public void initialize() {
-        // Pre-fill with the customer's first account
         try {
             var customer = SessionManager.getInstance().getCurrentCustomer();
             if (customer == null) return;
@@ -28,13 +27,9 @@ public class BuyController {
                 accountIdField.setText(String.valueOf(accounts.get(0).getAccountId()));
             }
         } catch (Exception e) {
-            // Leave field empty
         }
     }
 
-    // Each buy action calls this with a description and amount.
-    // It processes a WITHDRAW transaction - buying deducts from the account.
-    // UUID generates a unique reference ID automatically for each purchase.
     private void processPurchase(String description, double amount) {
         String idText = accountIdField.getText().trim();
         if (idText.isEmpty()) {

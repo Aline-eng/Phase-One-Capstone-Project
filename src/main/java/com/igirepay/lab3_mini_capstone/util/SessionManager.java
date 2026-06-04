@@ -29,7 +29,6 @@ public class SessionManager {
         this.currentRole = role != null ? role : "USER";
     }
 
-    // Convenience method - any controller can call this to check access
     public boolean isAdmin() {
         return "ADMIN".equals(currentRole);
     }

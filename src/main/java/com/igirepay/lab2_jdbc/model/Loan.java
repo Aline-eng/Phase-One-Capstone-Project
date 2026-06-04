@@ -7,7 +7,7 @@ public class Loan {
     private int customerId;
     private double amount;
     private String reason;
-    private String status; // PENDING, APPROVED, REJECTED
+    private String status;
     private LocalDateTime requestedAt;
 
     public Loan(int id, int customerId, double amount, String reason, String status, LocalDateTime requestedAt) {

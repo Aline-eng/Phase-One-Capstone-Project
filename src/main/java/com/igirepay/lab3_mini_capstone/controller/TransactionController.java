@@ -16,19 +16,16 @@ import java.util.UUID;
 
 public class TransactionController {
 
-    // Tab buttons
     @FXML private Button tabDeposit;
     @FXML private Button tabWithdraw;
     @FXML private Button tabTransfer;
 
-    // Shared
     @FXML private ComboBox<String> accountDropdown;
     @FXML private TextField amountField;
     @FXML private Label feeInfoLabel;
     @FXML private Label messageLabel;
     @FXML private Button submitButton;
 
-    // Transfer-only section
     @FXML private VBox transferSection;
     @FXML private TextField receiverPhoneField;
     @FXML private Button lookupBtn;
@@ -36,17 +33,15 @@ public class TransactionController {
     @FXML private Label confirmNameLabel;
     @FXML private Label confirmPhoneLabel;
 
-    // PIN confirmation (shown for all transaction types before submit)
     @FXML private VBox pinSection;
     @FXML private PasswordField pinField;
 
-    // Savings info box
     @FXML private VBox savingsInfoBox;
 
     private final JdbcWalletService service = new JdbcWalletService();
     private TransactionType currentType = TransactionType.DEPOSIT;
     private List<Account> myAccounts;
-    private Customer resolvedReceiver; // set after phone lookup
+    private Customer resolvedReceiver;
 
     @FXML
     public void initialize() {
@@ -75,7 +70,7 @@ public class TransactionController {
         }
     }
 
-    // ===== TAB SWITCHING =====
+
 
     @FXML private void switchToDeposit() {
         currentType = TransactionType.DEPOSIT;
@@ -113,7 +108,6 @@ public class TransactionController {
         clearMessage();
     }
 
-    // ===== PHONE LOOKUP FOR TRANSFER =====
 
     @FXML
     private void handlePhoneLookup() {
@@ -143,7 +137,6 @@ public class TransactionController {
         }
     }
 
-    // ===== SUBMIT =====
 
     @FXML
     private void handleSubmit() {
@@ -187,7 +180,7 @@ public class TransactionController {
 
             amountField.clear();
             pinField.clear();
-            loadMyAccounts(); // refresh balances in dropdown
+            loadMyAccounts();
 
         } catch (NumberFormatException e) {
             showError("Amount must be a valid number.");
@@ -196,7 +189,6 @@ public class TransactionController {
         }
     }
 
-    // ===== HELPERS =====
 
     private void checkSavingsInfo() {
         int idx = accountDropdown.getSelectionModel().getSelectedIndex();

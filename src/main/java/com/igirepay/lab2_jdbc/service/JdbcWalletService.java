@@ -82,7 +82,7 @@ public class JdbcWalletService {
         return transaction;
     }
 
-    // Ownership-enforced version used by the UI — ensures the account belongs to the customer
+
     public Transaction processTransaction(int customerId, int accountId, String referenceId, double amount, TransactionType type)
             throws Exception {
 
@@ -95,16 +95,13 @@ public class JdbcWalletService {
     public Transaction transfer(int senderCustomerId, int senderAccountId, String receiverPhone, String referenceId, double amount)
             throws Exception {
 
-        // Ownership check — sender must own the source account
         List<Account> owned = accountDAO.findByCustomerId(senderCustomerId);
         boolean owns = owned.stream().anyMatch(a -> a.getAccountId() == senderAccountId);
         if (!owns) throw new Exception("Access denied: account " + senderAccountId + " does not belong to your profile.");
 
-        // Resolve receiver by phone number
         Customer receiver = customerDAO.findByPhone(receiverPhone);
         if (receiver == null) throw new Exception("No account found for phone number: " + receiverPhone);
 
-        // Get receiver's primary (first) account
         List<Account> receiverAccounts = accountDAO.findByCustomerId(receiver.getCustomerId());
         if (receiverAccounts.isEmpty()) throw new Exception(receiver.getFullName() + " has no accounts to receive money.");
         int receiverAccountId = receiverAccounts.get(0).getAccountId();
@@ -112,7 +109,7 @@ public class JdbcWalletService {
         return transfer(senderAccountId, receiverAccountId, referenceId, amount);
     }
 
-    // Lookup a customer by phone for transfer confirmation screen
+
     public Customer findCustomerByPhone(String phone) throws Exception {
         Customer c = customerDAO.findByPhone(phone);
         if (c == null) throw new Exception("No customer found with phone number: " + phone);
@@ -231,22 +228,21 @@ public class JdbcWalletService {
         customerDAO.updatePin(customerId, newPin);
     }
 
-    // Submits a loan request for a customer
+
     public int requestLoan(int customerId, double amount, String reason) throws SQLException {
         return loanDAO.save(customerId, amount, reason);
     }
 
-    // Returns all loan requests for one customer
+
     public List<Loan> getLoansByCustomer(int customerId) throws SQLException {
         return loanDAO.findByCustomerId(customerId);
     }
 
-    // Admin - returns all loan requests in the system
+
     public List<Loan> getAllLoans() throws SQLException {
         return loanDAO.findAll();
     }
 
-    // Admin - approves or rejects a loan
     public void updateLoanStatus(int loanId, String status) throws SQLException {
         loanDAO.updateStatus(loanId, status);
     }

@@ -39,7 +39,6 @@ public class CustomerController {
         profilePhoneLabel.setText(customer.getPhoneNumber());
         profileIdLabel.setText("Customer ID: " + customer.getCustomerId());
 
-        // Pre-fill update form - ID is read-only, user only edits name/email/phone
         updateIdField.setText(String.valueOf(customer.getCustomerId()));
         updateNameField.setText(customer.getFullName());
         updateEmailField.setText(customer.getEmail());
@@ -66,14 +65,11 @@ public class CustomerController {
         }
 
         try {
-            // Always use the session customer's ID - the field is read-only but we
-            // get it from the session as the authoritative source
             Customer current = SessionManager.getInstance().getCurrentCustomer();
             if (current == null) return;
 
             service.updateCustomer(new Customer(current.getCustomerId(), name, email, phone));
 
-            // Refresh the session with updated details
             Customer updated = new Customer(current.getCustomerId(), name, email, phone);
             SessionManager.getInstance().setCurrentCustomer(updated);
 
@@ -110,7 +106,6 @@ public class CustomerController {
             Customer customer = SessionManager.getInstance().getCurrentCustomer();
             if (customer == null) return;
 
-            // Verify current PIN before allowing change
             Customer verified = service.login(customer.getCustomerId(), currentPin);
             if (verified == null) {
                 showPinMsg("Current PIN is incorrect.", false);

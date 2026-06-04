@@ -9,7 +9,6 @@ import java.util.List;
 
 public class LoanDAO {
 
-    // Saves a new loan request - status defaults to PENDING
     public int save(int customerId, double amount, String reason) throws SQLException {
         String sql = "INSERT INTO loans (customer_id, amount, reason) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -24,7 +23,6 @@ public class LoanDAO {
         }
     }
 
-    // Returns all loans for one customer
     public List<Loan> findByCustomerId(int customerId) throws SQLException {
         String sql = "SELECT * FROM loans WHERE customer_id = ? ORDER BY requested_at DESC";
         List<Loan> list = new ArrayList<>();
@@ -37,7 +35,6 @@ public class LoanDAO {
         return list;
     }
 
-    // Returns all loans in the system - used by admin
     public List<Loan> findAll() throws SQLException {
         String sql = "SELECT * FROM loans ORDER BY requested_at DESC";
         List<Loan> list = new ArrayList<>();
@@ -49,7 +46,6 @@ public class LoanDAO {
         return list;
     }
 
-    // Admin updates loan status to APPROVED or REJECTED
     public void updateStatus(int loanId, String status) throws SQLException {
         String sql = "UPDATE loans SET status = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();

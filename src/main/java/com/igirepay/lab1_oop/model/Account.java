@@ -23,7 +23,6 @@ public abstract class Account {
     public double getBalance() { return balance; }
     public void setBalance(double balance) { this.balance = balance; }
     public String getAccountType() { return accountType; }
-    public void setAccountType(String accountType) { this.accountType = accountType; }
 
     @Override
     public String toString() {

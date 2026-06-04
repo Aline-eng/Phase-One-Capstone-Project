@@ -76,10 +76,6 @@ public class TransactionDAO implements GenericDAO<Transaction> {
         return list;
     }
 
-    /**
-     * Returns a daily summary map: date string -> [totalIn, totalOut]
-     * for a given account, grouped by calendar day.
-     */
     public Map<String, double[]> getDailySummary(int accountId) throws SQLException {
         String sql = "SELECT DATE(created_at) AS day, transaction_type, SUM(amount) AS total "
                    + "FROM transactions WHERE account_id = ? "
