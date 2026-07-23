@@ -83,6 +83,13 @@ public class DashboardController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
+            recentTransactionsBox.getChildren().clear();
+            recentTransactionsBox.getChildren().add(
+                new Label("Unable to load recent transactions") {{
+                    setStyle("-fx-text-fill: #E53935; -fx-font-size: 12px;");
+                }}
+            );
         }
     }
 
