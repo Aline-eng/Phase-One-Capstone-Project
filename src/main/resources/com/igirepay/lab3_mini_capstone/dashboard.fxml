@@ -96,7 +96,7 @@
                         <GridPane hgap="12" vgap="12">
                             <!-- Row 1 -->
                             <VBox GridPane.columnIndex="0" GridPane.rowIndex="0"
-                                  styleClass="action-tile" onMouseClicked="#showSendMoney"
+                                  onMouseClicked="#showSendMoney"
                                   style="-fx-background-color: #FFF8E1; -fx-background-radius: 12;
                                          -fx-padding: 14; -fx-alignment: CENTER; -fx-cursor: hand;
                                          -fx-pref-width: 90; -fx-pref-height: 80;" spacing="6">
@@ -129,12 +129,12 @@
                                 <Label text="Accounts" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
                             </VBox>
                             <VBox GridPane.columnIndex="1" GridPane.rowIndex="1"
-                                  onMouseClicked="#showSavings"
+                                  onMouseClicked="#showLoans"
                                   style="-fx-background-color: #F3E5F5; -fx-background-radius: 12;
                                          -fx-padding: 14; -fx-alignment: CENTER; -fx-cursor: hand;
                                          -fx-pref-width: 90; -fx-pref-height: 80;" spacing="6">
                                 <Label text="🏦" style="-fx-font-size: 22px;"/>
-                                <Label text="Savings" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
+                                <Label text="Loans" style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>
                             </VBox>
                             <VBox GridPane.columnIndex="2" GridPane.rowIndex="1"
                                   onMouseClicked="#showBuy"

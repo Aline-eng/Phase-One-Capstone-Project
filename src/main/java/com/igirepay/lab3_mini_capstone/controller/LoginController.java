@@ -11,7 +11,6 @@ public class LoginController {
 
     @FXML private TextField phoneField;
     @FXML private PasswordField pinField;
-
     @FXML private TextField fullNameField;
     @FXML private TextField emailField;
     @FXML private PasswordField newPinField;
@@ -36,7 +35,6 @@ public class LoginController {
         }
 
         try {
-            // Check if account is locked before attempting login
             if (service.isAccountLocked(phone)) {
                 showError("Your account is locked after 3 failed attempts.\nPlease contact support to unlock it.");
                 return;
@@ -101,14 +99,11 @@ public class LoginController {
         }
 
         try {
-            // PIN is included in the same INSERT - no separate update call needed.
-            // This also means if anything fails, the ID does not advance.
             Customer customer = new Customer(0, name, email, phone);
             int newId = service.registerCustomer(customer, pin);
             showSuccess("Account created successfully!\nYour Customer ID is: " + newId
                     + "\nYou can now log in with your phone number and PIN.");
         } catch (Exception e) {
-            // CustomerDAO.friendlyError() already translated the DB error
             showError(e.getMessage());
         }
     }

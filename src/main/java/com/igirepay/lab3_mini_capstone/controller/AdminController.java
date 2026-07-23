@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class AdminController {
 
-    // Find customer section
+
     @FXML private TextField searchIdField;
     @FXML private VBox foundCustomerBox;
     @FXML private Label foundNameLabel;
@@ -32,22 +32,18 @@ public class AdminController {
     @FXML private Label foundAttemptsLabel;
     @FXML private Label findMessageLabel;
 
-    // Transactions section
+
     @FXML private TextField txAccountIdField;
     @FXML private Label txSummaryLabel;
     @FXML private VBox txListBox;
 
-    // All customers section
     @FXML private VBox customersListBox;
 
-    // Loans section
     @FXML private VBox loansListBox;
 
-    // Daily summary section
     @FXML private TextField summaryAccountIdField;
     @FXML private VBox dailySummaryListBox;
 
-    // Admin name label
     @FXML private Label adminNameLabel;
 
     private final JdbcWalletService service = new JdbcWalletService();
@@ -56,7 +52,6 @@ public class AdminController {
 
     @FXML
     public void initialize() {
-        // Redirect non-admins immediately
         if (!SessionManager.getInstance().isAdmin()) {
             navigate("dashboard");
             return;
@@ -67,7 +62,6 @@ public class AdminController {
         }
     }
 
-    // ===== CUSTOMER MANAGEMENT =====
 
     @FXML
     private void handleFind() {
@@ -137,9 +131,6 @@ public class AdminController {
         }
     }
 
-    // ===== TRANSACTION VIEW =====
-
-    // Admin can view transactions for ANY account - not restricted to their own
     @FXML
     private void handleLoadTransactions() {
         String idText = txAccountIdField.getText().trim();
@@ -258,7 +249,6 @@ public class AdminController {
         phone.setStyle("-fx-font-size: 10px; -fx-text-fill: #888888;");
         info.getChildren().addAll(name, phone);
 
-        // Clicking a row loads that customer into the find section
         row.setOnMouseClicked(e -> {
             searchIdField.setText(String.valueOf(c.getCustomerId()));
             handleFind();
@@ -268,7 +258,6 @@ public class AdminController {
         return row;
     }
 
-    // ===== DAILY SUMMARY =====
 
     @FXML
     private void handleLoadDailySummary() {
@@ -316,7 +305,6 @@ public class AdminController {
         }
     }
 
-    // ===== LOGOUT =====
 
     @FXML
     private void handleLogout() {
@@ -324,7 +312,6 @@ public class AdminController {
         navigate("login");
     }
 
-    // ===== LOAN MANAGEMENT =====
 
     @FXML
     private void loadAllLoans() {
@@ -369,7 +356,6 @@ public class AdminController {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Approve / Reject buttons only for PENDING loans
         VBox actions = new VBox(4);
         actions.setAlignment(Pos.CENTER_RIGHT);
         if ("PENDING".equals(loan.getStatus())) {
@@ -400,11 +386,9 @@ public class AdminController {
             service.updateLoanStatus(loanId, status);
             loadAllLoans();
         } catch (Exception e) {
-            // silently refresh
         }
     }
 
-    // ===== HELPERS =====
 
     private Label noLabel(String msg) {
         Label l = new Label(msg);

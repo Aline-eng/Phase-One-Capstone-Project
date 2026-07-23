@@ -18,21 +18,18 @@ import java.util.UUID;
 
 public class AccountController {
 
-    // Account overview cards
     @FXML private Label walletBalanceLabel;
     @FXML private Label walletIdLabel;
     @FXML private Label savingsBalanceLabel;
     @FXML private Label savingsIdLabel;
     @FXML private Label noAccountsLabel;
 
-    // Internal transfer section
     @FXML private ComboBox<String> fromDropdown;
     @FXML private ComboBox<String> toDropdown;
     @FXML private TextField transferAmountField;
     @FXML private PasswordField transferPinField;
     @FXML private Label transferMessageLabel;
 
-    // Create new account section
     @FXML private ToggleButton walletToggle;
     @FXML private ToggleButton savingsToggle;
     @FXML private TextField balanceField;
@@ -74,7 +71,6 @@ public class AccountController {
                 savingsIdLabel.setText("Create one below");
             }
 
-            // Populate transfer dropdowns
             fromDropdown.getItems().clear();
             toDropdown.getItems().clear();
             for (Account a : myAccounts) {
@@ -96,7 +92,6 @@ public class AccountController {
         }
     }
 
-    // ===== INTERNAL TRANSFER (wallet ↔ savings) =====
 
     @FXML
     private void handleInternalTransfer() {
@@ -146,7 +141,6 @@ public class AccountController {
         }
     }
 
-    // ===== CREATE NEW ACCOUNT =====
 
     @FXML
     private void handleCreate() {

@@ -32,7 +32,6 @@ public class DashboardController {
 
         phoneLabel.setText(customer.getPhoneNumber());
 
-        // Show admin panel button only if the logged-in user is an admin
         if (SessionManager.getInstance().isAdmin()) {
             adminPanelBtn.setVisible(true);
             adminPanelBtn.setManaged(true);
@@ -50,7 +49,6 @@ public class DashboardController {
                 accountTypeLabel.setText("No accounts yet");
                 return;
             }
-            // Show the first account's balance on the main card
             Account primary = accounts.get(0);
             balanceLabel.setText(String.format("%,.0f RWF", primary.getBalance()));
             accountTypeLabel.setText(primary.getAccountType() + " Account  •  ID: " + primary.getAccountId());
@@ -76,7 +74,6 @@ public class DashboardController {
                 return;
             }
 
-            // Show up to 4 most recent transactions as rows
             int limit = Math.min(transactions.size(), 4);
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd MMM HH:mm");
 
@@ -86,18 +83,22 @@ public class DashboardController {
             }
 
         } catch (Exception e) {
-            // Leave the default label
+            e.printStackTrace();
+            recentTransactionsBox.getChildren().clear();
+            recentTransactionsBox.getChildren().add(
+                new Label("Unable to load recent transactions") {{
+                    setStyle("-fx-text-fill: #E53935; -fx-font-size: 12px;");
+                }}
+            );
         }
     }
 
-    // Builds one transaction row: icon + type/ref on left, amount + date on right
     private HBox buildTransactionRow(Transaction t, DateTimeFormatter fmt) {
         HBox row = new HBox();
         row.setStyle("-fx-padding: 8 0 8 0; -fx-border-color: transparent transparent #F5F5F5 transparent;");
         row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         row.setSpacing(10);
 
-        // Icon based on transaction type
         String icon = switch (t.getTransactionType()) {
             case DEPOSIT      -> "⬇";
             case WITHDRAW     -> "⬆";
@@ -106,12 +107,11 @@ public class DashboardController {
             case TRANSFER     -> "↔";
         };
 
-        // Icon circle
         Label iconLabel = new Label(icon);
         iconLabel.setStyle("-fx-background-color: #F5F5F5; -fx-background-radius: 20; " +
                            "-fx-padding: 8; -fx-font-size: 14px;");
 
-        // Left side: type and reference
+
         VBox leftBox = new VBox(2);
         Label typeLabel = new Label(t.getTransactionType().name().replace("_", " "));
         typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #333333;");
@@ -122,11 +122,10 @@ public class DashboardController {
         Region spacer = new Region();
         HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
 
-        // Right side: amount and date
+
         VBox rightBox = new VBox(2);
         rightBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
 
-        // Color amount based on type - green for incoming, red for outgoing
         boolean isIncoming = t.getTransactionType().name().contains("DEPOSIT")
                           || t.getTransactionType().name().contains("IN");
         Label amountLabel = new Label((isIncoming ? "+" : "-") +
@@ -141,7 +140,6 @@ public class DashboardController {
         return row;
     }
 
-    // ===== NAVIGATION =====
 
     @FXML private void showDashboard() {
         navigate("dashboard");
